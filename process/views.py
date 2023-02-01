@@ -10,7 +10,7 @@ from rest_framework.response import Response
 def getRoutes(request):
     
     routes = [
-        {'GET': 'api/urls'}
+        {'GET': 'process/urls'}
     ]
     
     return Response(routes)

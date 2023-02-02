@@ -133,3 +133,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 #     'PAGE_SIZE': 10
 # }
+
+PAYME_SETTINGS = {
+    'DEBUG':True,   #True - test mode, False - production mode
+    'PAY_ME_ID':os.getenv('PAY_ME_ID'),  
+    'PAY_ME_TEST_KEY':os.getenv('PAY_ME_TEST_KEY'),
+    'ACCOUNTS':{
+        'KEY_1':'order_id',
+        'KEY_2':'',
+    }
+}

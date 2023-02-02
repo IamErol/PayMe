@@ -16,5 +16,5 @@ def hello_world(request):
 def index(request):
     return HttpResponse('Hello')
 
-def main(request):
-    return HttpResponse('Main')
+# def main(request):
+#     return HttpResponse('Main')

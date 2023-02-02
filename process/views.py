@@ -62,7 +62,7 @@ def index(request):
 
     
     
-@api_view(['GET', 'POST', 'DELETE'])
+@api_view(['GET', 'POST'])
 def token(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)

@@ -15,3 +15,6 @@ from django.http import JsonResponse
 
 def index(request):
     return HttpResponse('Hello')
+
+def main(request):
+    return HttpResponse('Main')

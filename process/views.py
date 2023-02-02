@@ -21,7 +21,7 @@ URL = 'https://checkout.test.paycom.uz/api'
 class CardsCheck(APIView):
     '''Проверяем токен пластиковокй карты от фронта'''
     
-    def get(self, request):
+    def post(self, request):
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         result = self.cards_check(serializer.validated_data)
@@ -38,7 +38,7 @@ class CardsCheck(APIView):
             )
         )
         
-        response = requests.get(URL, json=data, headers=AUTHORIZATION)
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()
         if 'error' in result:
             return result

@@ -80,8 +80,12 @@ class CardsCheck(APIView):
 
 
 
-# def index(request):
-#     return HttpResponse('Index')
+def index(request):
+    return HttpResponse('Index')
+
+
+def main(request):
+    return HttpResponse('main')
 
 
 # class PaymentApiView(APIView):

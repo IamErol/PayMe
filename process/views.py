@@ -23,29 +23,38 @@ URL = 'https://checkout.test.paycom.uz/api'
 class CardsCheck(APIView):
     '''Проверяем токен пластиковокй карты от фронта'''
     
-    def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False)
-        serializer.is_valid(raise_exception=True)
-        result = self.cards_check(serializer.validated_data)
-        
-        return Response(result)
+    def ab(self, request):
+        serializer = SubscribeSerializer(data=request.data)
+        if serializer.is_valid():
+            name = serializer.data.get('token')
+            message = f'token {name}'
+            return Response({'message': message})
+        else:
+            return Response(serializer.errors)
     
-    def cards_check(self, validated_data):
-        data = dict(
-            # id=validated_data['id'],
-            id=123456789,
-            method='cards.verify',
-            params={
-                'token': 'tokenvalue'
-            }
-        )
+    # def post(self, request):
+    #     serializer = SubscribeSerializer(data=request.data, many=False)
+    #     serializer.is_valid(raise_exception=True)
+    #     result = self.cards_check(serializer.validated_data)
         
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response.json()
-        if 'error' in result:
-            return result
+    #     return Response(result)
+    
+    # def cards_check(self, validated_data):
+    #     data = dict(
+    #         # id=validated_data['id'],
+    #         id=123456789,
+    #         method='cards.verify',
+    #         params={
+    #             'token': 'tokenvalue'
+    #         }
+    #     )
         
-        return result
+    #     response = requests.post(URL, json=data, headers=AUTHORIZATION)
+    #     result = response.json()
+    #     if 'error' in result:
+    #         return result
+        
+    #     return result
 
 
 @api_view(['GET', 'POST'])
@@ -59,12 +68,12 @@ def main(request):
 def index(request):
     return HttpResponse('Index')
 
-@api_view('POST')
-def ab(request):
-    serializer = SubscribeSerializer(data=request.data)
-    if serializer.is_valid():
-        name = serializer.data.get('token')
-        message = f'token {name}'
-        return Response({'message': message})
-    else:
-        return Response(serializer.errors)
+# @api_view('POST')
+# def ab(request):
+#     serializer = SubscribeSerializer(data=request.data)
+#     if serializer.is_valid():
+#         name = serializer.data.get('token')
+#         message = f'token {name}'
+#         return Response({'message': message})
+#     else:
+#         return Response(serializer.errors)

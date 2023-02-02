@@ -23,7 +23,7 @@ URL = 'https://checkout.test.paycom.uz/api'
 class CardsCheck(APIView):
     '''Проверяем токен пластиковокй карты от фронта'''
     
-    def ab(self, request):
+    def post(self, request):
         serializer = SubscribeSerializer(data=request.data)
         if serializer.is_valid():
             name = serializer.data.get('token')

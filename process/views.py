@@ -59,12 +59,7 @@ def main(request):
 def index(request):
     return HttpResponse('Index')
 
+@api_view('POST')
 def ab(request):
-    url = 'https://payme-gamma.vercel.app/api/token'
-
-    request_data = {
-        'tokent': 'tone_data'
-    }
-
-    response = requests.post(url, json=request_data)
-    return response.json()
+    response = request.json()
+    return response

@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
-from .serializers import SubscribeSerializer
+# from .serializers import SubscribeSerializer
 from payments.settings import PAYME_SETTINGS
 import requests
 from rest_framework.parsers import JSONParser 
@@ -24,13 +24,12 @@ class CardsCheck(APIView):
     '''Проверяем токен пластиковокй карты от фронта'''
     
     def post(self, request):
-        serializer = SubscribeSerializer(data=request.data)
-        if serializer.is_valid():
-            name = serializer.data
-            message = f'token {name}'
-            return Response({'message': message})
-        else:
-            return Response(serializer.errors)
+        message = request.data
+        return Response({'message': message})
+        # serializer = SubscribeSerializer(data=request.data)
+        # if serializer.is_valid():
+        #     name = serializer.data
+
     
     # def post(self, request):
     #     serializer = SubscribeSerializer(data=request.data, many=False)

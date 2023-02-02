@@ -29,9 +29,9 @@ class CardsCheck(APIView):
     def post(self, request):
         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
         serializer.is_valid()
-        token = serializer.validated_data["params"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
+        token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
         result = self.cards_check(token)
-        return Response(token)
+        return Response(result)
 
 
     def cards_check(self, token):
@@ -44,7 +44,7 @@ class CardsCheck(APIView):
                     }
         }
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response.json()
+        result = response
 
 # class CardsCheck(APIView):
 #     '''Проверяем токен пластиковокй карты от фронта'''

@@ -15,7 +15,7 @@ import requests
 
 
 AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
-URL = 'https://developer.help.paycom.uz/protokol-subscribe-api'
+URL = 'https://checkout.test.paycom.uz/api'
 
 
 class CardsCheck(APIView):

@@ -24,8 +24,8 @@ class CardsCheck(APIView):
     '''Проверяем токен пластиковокй карты от фронта'''
     
     def post(self, request):
-        message = request.data
-        return Response({'message': message})
+        message = request.data.get("token")
+        return Response({'token': message})
         # serializer = SubscribeSerializer(data=request.data)
         # if serializer.is_valid():
         #     name = serializer.data

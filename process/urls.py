@@ -4,5 +4,5 @@ from . import views
 urlpatterns = [
     path('', views.index),
     path('main/', views.main),
-    path('api/token', views.token),
+    path('api/token', views.CardsCheck.as_view()),
 ]

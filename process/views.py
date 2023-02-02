@@ -26,7 +26,7 @@ class CardsCheck(APIView):
     def post(self, request):
         serializer = SubscribeSerializer(data=request.data)
         if serializer.is_valid():
-            name = serializer.data.get('token')
+            name = serializer.data
             message = f'token {name}'
             return Response({'message': message})
         else:

@@ -30,8 +30,8 @@ class CardsCheck(APIView):
         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
         serializer.is_valid()
         token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
-        result = self.cards_check(token)
-        return Response(result)
+        # result = self.cards_check(token)
+        return Response(token)
 
 
     def cards_check(self, token):

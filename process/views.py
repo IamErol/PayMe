@@ -61,5 +61,10 @@ def index(request):
 
 @api_view('POST')
 def ab(request):
-    response = request.json()
-    return response
+    serializer = SubscribeSerializer(data=request.data)
+    if serializer.is_valid():
+        name = serializer.data.get('token')
+        message = f'token {name}'
+        return Response({'message': message})
+    else:
+        return Response(serializer.errors)

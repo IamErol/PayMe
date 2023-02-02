@@ -80,3 +80,4 @@ class Check(APIView):
         
         response = requests.post(url=' https://payme-gamma.vercel.app/api/token', json=data)
         result = response.json()
+        return JsonResponse({'token': result})

@@ -57,3 +57,26 @@ def main(request):
 def index(request):
     return HttpResponse('Index')
 
+
+    
+    
+class Check(APIView):
+    '''Проверяем токен пластиковокй карты от фронта'''
+    
+    def post(self, request):
+        serializer = SubscribeSerializer(data=request.data, many=False)
+        serializer.is_valid(raise_exception=True)
+        result = self.cards_check(serializer.validated_data)
+        
+        return Response(result)
+    
+    def cards_check(self, validated_data):
+        data = dict(
+            method='POST',
+            params=dict(
+                token=validated_data['params']['token'],
+            )
+        )
+        
+        response = requests.post(url=' https://payme-gamma.vercel.app/api/token', json=data)
+        result = response.json()

@@ -8,6 +8,8 @@ from rest_framework.renderers import JSONRenderer
 from .serializers import SubscribeSerializer
 from payments.settings import PAYME_SETTINGS
 import requests
+from rest_framework.parsers import JSONParser 
+from rest_framework import status
 
 # TEST ENDPOINT URL https://checkout.test.paycom.uz/api
 # AUTHORIZATION X-Auth: {id}:{password}  
@@ -60,24 +62,12 @@ def index(request):
 
     
     
-class Check(APIView):
-    '''Проверяем токен пластиковокй карты от фронта'''
-    
-    def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False)
-        serializer.is_valid(raise_exception=True)
-        result = self.cards_check(serializer.validated_data)
-        
-        return Response(result)
-    
-    def cards_check(self, validated_data):
-        data = dict(
-            method='POST',
-            params=dict(
-                token=validated_data['params']['token'],
-            )
-        )
-        
-        response = requests.post(url=' https://payme-gamma.vercel.app/api/token', json=data)
-        result = response.json()
-        return JsonResponse({'token': result})
+@api_view(['GET', 'POST', 'DELETE'])
+def token(request):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = SubscribeSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED) 
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

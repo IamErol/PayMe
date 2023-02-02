@@ -43,7 +43,7 @@ class CardsCheck(APIView):
                         "token": token
                     }
         }
-        response = requests.post(URL, json=data)
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()
 
 # class CardsCheck(APIView):

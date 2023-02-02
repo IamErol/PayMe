@@ -31,7 +31,7 @@ class CardsCheck(APIView):
     def cards_check(self, validated_data):
         data = dict(
             # id=validated_data['id'],
-            id='123456789',
+            id=123456789,
             method='cards.verify',
             params=dict(
                 token=validated_data['params']['token'],

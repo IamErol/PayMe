@@ -10,6 +10,7 @@ from payments.settings import PAYME_SETTINGS
 import requests
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
+from .models import *
 
 # TEST ENDPOINT URL https://checkout.test.paycom.uz/api
 # AUTHORIZATION X-Auth: {id}:{password}  
@@ -29,6 +30,8 @@ class CardsCheck(APIView):
         serializer.is_valid()
         token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
         result = self.cards_check(token)
+        SupabaseActions().db_save(validated_data=serializer.validated_data["params"])
+        
         return Response(result)
 
 
@@ -53,7 +56,7 @@ class CardsRemove(APIView):
         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
         serializer.is_valid()
         token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
-        result = self.cards_remove(token)
+        result = self.cards_remove(token)    
         return Response(result)
 
     def cards_remove(self, token, ):
@@ -73,35 +76,46 @@ class CardsRemove(APIView):
 class Receipts(APIView):
     
     def post(self, request):
-        ...
+        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+        serializer.is_valid()
+        result = self.receipts_create(serializer.validated_data)
+        return Response(result)
+        # token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
         
         
-    def receipts_create(self, request):
+    def receipts_create(self, validated_data):
         
         data = {    
                 "id": 123,
                 "method": "receipts.create",
                 "params":{
-                            "amount": 00000,
+                            "amount": validated_data["params"]["amount"],
                             "account":  {
-                                            "user_id" : "00000000",
-                                            "email" : "mail@mail.com",
-                                            "phone" : "903595731",
+                                            "user_id" : validated_data["params"]["account"]["user_id"],
+                                            "email" : validated_data["params"]["account"]["email"],
+                                            "phone" : validated_data["params"]["account"]["phone"],
                                         },
 
                             }}
         
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response
+        result = response.json()
+        if 'error' in result:
+            return result
+        
+        # database operations needed
+        
+        result = self.receipts_pay(validated_data)
+        return result
 
-    def receipts_pay(self, request):
+    def receipts_pay(self, validated_data):
 
         data = {
                     "id": 123,
                     "method": "receipts.pay",
                     "params": {
-                                "id": "2e0b1bc1f1eb50d487ba268d",
-                                "token": "token",
+                                "id": validated_data["params"]["id"],  #ID чека
+                                "token": validated_data["params"]["token"],
                                 }
                 }
         

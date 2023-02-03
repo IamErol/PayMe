@@ -10,7 +10,7 @@ from payments.settings import PAYME_SETTINGS
 import requests
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
-from .models import *
+# from .models import *
 
 # TEST ENDPOINT URL https://checkout.test.paycom.uz/api
 # AUTHORIZATION X-Auth: {id}:{password}  
@@ -20,7 +20,7 @@ from .models import *
 AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 URL = 'https://checkout.test.paycom.uz/api'
 
-supa = SupabaseActions()
+# supa = SupabaseActions()
 
 
 class CardsCheck(APIView):

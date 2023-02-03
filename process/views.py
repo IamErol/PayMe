@@ -31,7 +31,7 @@ class CardsCheck(APIView):
         serializer.is_valid()
         token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
         result = self.cards_check(token)
-        supa.db_save(serializer.validated_data)
+        # supa.db_save(serializer.validated_data)
         return Response(result)
 
 

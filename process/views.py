@@ -28,7 +28,7 @@ class CardsCheck(APIView):
     
     def post(self, request):
         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
         result = self.cards_check(token)
         # supa.db_save(serializer.validated_data)

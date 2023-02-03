@@ -10,7 +10,13 @@ from payments.settings import PAYME_SETTINGS
 import requests
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
-# from .models import *
+
+import os
+from supabase.client import create_client, Client
+from dotenv import load_dotenv
+from random import randint
+load_dotenv()
+from .models import *
 
 # TEST ENDPOINT URL https://checkout.test.paycom.uz/api
 # AUTHORIZATION X-Auth: {id}:{password}  
@@ -20,7 +26,7 @@ from rest_framework import status
 AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 URL = 'https://checkout.test.paycom.uz/api'
 
-# supa = SupabaseActions()
+supa = SupabaseActions()
 
 
 class CardsCheck(APIView):
@@ -31,7 +37,7 @@ class CardsCheck(APIView):
         serializer.is_valid(raise_exception=True)
         token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
         result = self.cards_check(token)
-        # supa.db_save(serializer.validated_data)
+        supa.db_save(serializer.validated_data)
         return Response(result)
 
 

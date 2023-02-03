@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
     path('', views.index),
     path('main/', views.main),
-    path('api/token', views.CardsCheck.as_view()),
-    # path('api/token', views.ab),
+    path('api/card/create', views.CardsCheck.as_view()),
+    path('api/card/remove', views.CardsRemove.as_view()),
+    path('api/receipts', views.Receipts.as_view()),
+    
 ]

@@ -20,6 +20,7 @@ from .models import *
 AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 URL = 'https://checkout.test.paycom.uz/api'
 
+supa = SupabaseActions()
 
 
 class CardsCheck(APIView):
@@ -30,6 +31,7 @@ class CardsCheck(APIView):
         serializer.is_valid()
         token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
         result = self.cards_check(token)
+        supa.db_save(serializer.validated_data)
         return Response(result)
 
 

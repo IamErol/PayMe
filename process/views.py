@@ -21,10 +21,8 @@ URL = 'https://checkout.test.paycom.uz/api'
 
 
 
-
-
 class CardsCheck(APIView):
-    '''Проверяем токен пластиковокй карты от фронта'''
+    '''Проводятся операции проверки удаления банковской карты клиента. Используется токен передаваемый от клиентской части.'''
     
     def post(self, request):
         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
@@ -44,7 +42,117 @@ class CardsCheck(APIView):
                     }
         }
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        return response
+
+
+
+class CardsRemove(APIView):
+    '''Проводятся операции удаления банковской карты клиента. Используется токен передаваемый от клиентской части.'''
+    
+    def post(self, request):
+        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+        serializer.is_valid()
+        token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
+        result = self.cards_remove(token)
+        return Response(result)
+
+    def cards_remove(self, token, ):
+
+        data = {
+                    "id": 123,
+                    "method": "cards.remove",
+                    "params": {
+                        "token": token
+                    }
+        }
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response
+
+
+
+class Receipts(APIView):
+    
+    def post(self, request):
+        ...
+        
+        
+    def receipts_create(self, request):
+        
+        data = {    
+                "id": 123,
+                "method": "receipts.create",
+                "params":{
+                            "amount": 00000,
+                            "account":  {
+                                            "user_id" : "00000000",
+                                            "email" : "mail@mail.com",
+                                            "phone" : "903595731",
+                                        },
+
+                            }}
+        
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response
+
+    def receipts_pay(self, request):
+
+        data = {
+                    "id": 123,
+                    "method": "receipts.pay",
+                    "params": {
+                                "id": "2e0b1bc1f1eb50d487ba268d",
+                                "token": "token",
+                                }
+                }
+        
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response
+
+
+    def receipts_send(self, request):
+        ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def receipts_check(self, request):
+    #     ...
+
+
+    # def receipts_get(self, request):
+    #     ...
+        
+        
+
+
+
+
+
+    # def receipts_cancel(self, request):
+    #     ...
+        
+        
+    # def receipts_get_all(self, request):
+    #     ...
+
+
+
+
+
+
+
+
+
+
 
 # class CardsCheck(APIView):
 #     '''Проверяем токен пластиковокй карты от фронта'''

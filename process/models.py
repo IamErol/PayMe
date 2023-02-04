@@ -14,8 +14,8 @@ transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
 customers_fields = ('full_name', 'email', 'phone', 'address')
 class SupabaseActions:
 
-    def __init__(self, url: str = os.getenv("SUPABASE_URL", default=''),
-                 key: str = os.getenv("SUPABASE_KEY", default=''),
+    def __init__(self, url: str = os.getenv("NEXT_PUBLIC_SUPABASE_URL", default=''),
+                 key: str = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY", default=''),
                  email: str = os.getenv("SUPABASE_USER_EMAIL", default=''),
                  password: str = os.getenv("SUPABASE_USER_PASSWORD", default=''),) -> None:
         

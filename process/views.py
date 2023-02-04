@@ -23,24 +23,29 @@ from .models import *
 # Test page link https://developer.help.paycom.uz/protokol-subscribe-api
 
 
-AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
+AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], 
+                                          PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
+
+
 URL = 'https://checkout.test.paycom.uz/api'
 
 supabase = SupabaseActions()
 
 
 class CardsCheck(APIView):
-    '''Проводятся операции проверки удаления банковской карты клиента. Используется токен передаваемый от клиентской части.'''
+    '''Проводятся операции проверки удаления банковской карты клиента.
+       Используется токен передаваемый от клиентской части.'''
     
     def post(self, request):
         serializer = SubscribeSerializer(data=request.data, many=True) #data = dict object from request
         serializer.is_valid(raise_exception=True)
-        token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
+        token = serializer.validated_data["info"]["token"]  # after decoding 
+        # from json we get validated data. Validated data returns a python dictionary.
         result = self.cards_check(token)
         
-        data = supabase.process_input_data(serializer.validated_data["info"], transaction_fileds)
+        data = supabase.process_input_data(serializer.validated_data["info"], customers_fields)
         supabase.db_login()
-        supabase.db_save(data)
+        supabase.db_save(validated_data=data, table_name='customer')
         
         return Response(result)
 
@@ -55,8 +60,8 @@ class CardsCheck(APIView):
                     }
         }
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        if 'error' in response.json():
-            return response.json()
+        # if 'error' in response.json():
+        #     return response.json()
         
         
         return response
@@ -64,7 +69,8 @@ class CardsCheck(APIView):
 
 
 class CardsRemove(APIView):
-    '''Проводятся операции удаления банковской карты клиента. Используется токен передаваемый от клиентской части.'''
+    '''Проводятся операции удаления банковской карты клиента. 
+    Используется токен передаваемый от клиентской части.'''
     
     def post(self, request):
         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
@@ -94,7 +100,8 @@ class Receipts(APIView):
         serializer.is_valid()
         result = self.receipts_create(serializer.validated_data)
         return Response(result)
-        # token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
+        # token = serializer.validated_data["info"]["token"]  # after decoding 
+        # from json we get validated data. Validated data returns a python dictionary.
         
         
     def receipts_create(self, validated_data):

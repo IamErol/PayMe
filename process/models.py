@@ -1,6 +1,6 @@
 from django.db import models
 import os
-# from supabase.client import create_client, Client
+from supabase.client import create_client, Client
 from dotenv import load_dotenv
 from random import randint
 load_dotenv()

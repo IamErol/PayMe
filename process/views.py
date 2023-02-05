@@ -19,6 +19,10 @@ from random import randint
 load_dotenv()
 from .models import *
 
+orders_fields = ('order_amount', 'fulfillment_status', 'owner')
+transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
+customers_fields = ('full_name', 'email', 'phone', 'address')
+
 # TEST ENDPOINT URL https://checkout.test.paycom.uz/api
 # AUTHORIZATION X-Auth: {id}:{password}  
 # Test page link https://developer.help.paycom.uz/protokol-subscribe-api
@@ -30,7 +34,7 @@ AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'],
 
 URL = 'https://checkout.test.paycom.uz/api'
 
-supabase = SupabaseActions()
+# supabase = SupabaseActions()
 
 
 class CardsCheck(APIView):

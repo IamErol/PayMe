@@ -30,7 +30,7 @@ AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'],
 
 URL = 'https://checkout.test.paycom.uz/api'
 
-# supabase = SupabaseActions()
+supabase = SupabaseActions()
 
 
 class CardsCheck(APIView):

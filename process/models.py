@@ -24,6 +24,12 @@ class SupabaseActions:
         self.email = email
         self.password = password
         
+    # def db_login(self):
+    #     supabase: Client = create_client(self.url, self.key)
+    #     supabase.auth.sign_out()
+    #     session = supabase.auth.sign_in(email=self.email, password=self.password)
+    #     return supabase
+    
         
     def process_input_data(self, validated_data: dict, fields: tuple) -> dict:
         '''Takes dictionary from post request and extracts fields that exists in 
@@ -33,15 +39,7 @@ class SupabaseActions:
         
         data = dict(zip(key, value))
         return data
-    
-    
-    def db_login(self) -> Client:
-        '''Sign in to supabase'''
-        supabase: Client = create_client(self.url, self.key)
-        supabase.auth.sign_out()
-        session = supabase.auth.sign_in(email=self.email, password=self.password)
-        return supabase
-    
+     
     
     @staticmethod
     def dict_check(data: dict):
@@ -61,3 +59,4 @@ class SupabaseActions:
             raise KeyError
         
         return None
+

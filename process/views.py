@@ -38,11 +38,10 @@ supabase = SupabaseActions()
 class CardsCreate(APIView):
     
     def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False)
-        if serializer.is_valid(raise_exception=True):
+        serializer = SubscribeSerializer(data=request.data)
+        if serializer.is_valid():
             response = serializer.validated_data
-        
-            return response
+            return request
         else:
             raise KeyError
         

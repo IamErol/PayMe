@@ -1,9 +1,9 @@
-from rest_framework import serializers
+# from rest_framework import serializers
 
 
-# .data serialized data
+# # .data serialized data
 
-class SubscribeSerializer(serializers.Serializer):
-    # id = serializers.IntegerField()
-    info = serializers.JSONField()  #validates if data in json format
+# class SubscribeSerializer(serializers.Serializer):
+#     # id = serializers.IntegerField()
+#     info = serializers.JSONField()  #validates if data in json format
     

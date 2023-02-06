@@ -38,12 +38,11 @@ supabase = SupabaseActions()
 class CardsCreate(APIView):
     
     def post(self, request):
-        serializer = SubscribeSerializer(data=request.data)
-        if serializer.is_valid():
-            response = serializer.validated_data
-            return request
-        else:
-            raise KeyError
+        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+        serializer.is_valid(raise_exception=True)
+        token = serializer.validated_data["info"]["token"]  # after decoding 
+        # from json we get validated data. Validated data returns a python dictionary.
+        result = token.json()
         
     
 

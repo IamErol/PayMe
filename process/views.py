@@ -12,7 +12,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 import os
-import supabase
+# import supabase
 from dotenv import load_dotenv
 from random import randint
 load_dotenv()

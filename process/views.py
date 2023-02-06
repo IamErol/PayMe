@@ -12,7 +12,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 import os
-import supabase
+from supabase.client import Client, create_client
 from dotenv import load_dotenv
 from random import randint
 load_dotenv()
@@ -34,6 +34,16 @@ AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'],
 URL = 'https://checkout.test.paycom.uz/api'
 
 supabase = SupabaseActions()
+
+class CardsCreate(APIView):
+    
+    def post(self, request):
+        serializer = SubscribeSerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        response = serializer.validated_data
+        return response.json()
+        
+    
 
 
 class CardsCheck(APIView):

@@ -12,7 +12,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 import os
-# import supabase
+import supabase
 from dotenv import load_dotenv
 from random import randint
 load_dotenv()
@@ -33,7 +33,7 @@ AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'],
 
 URL = 'https://checkout.test.paycom.uz/api'
 
-# supabase = SupabaseActions()
+supabase = SupabaseActions()
 
 
 class CardsCheck(APIView):

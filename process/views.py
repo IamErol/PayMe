@@ -41,8 +41,8 @@ class CardsCreate(APIView):
         # serializer = SubscribeSerializer(data=request.data, many=False)
         # serializer.is_valid(raise_exception=True)
         # response = serializer.validated_data
-        data = request.json()
-        return data
+        # data = request.json()
+        return None
         
     
 

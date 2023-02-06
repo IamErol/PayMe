@@ -42,7 +42,8 @@ class CardsCreate(APIView):
         serializer.is_valid(raise_exception=True)
         token = serializer.validated_data["info"]["token"]  # after decoding 
         # from json we get validated data. Validated data returns a python dictionary.
-        result = token.json()
+        result = token
+        return request
         
     
 

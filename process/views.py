@@ -38,10 +38,10 @@ supabase = SupabaseActions()
 class CardsCreate(APIView):
     
     def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=True)
+        serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         response = serializer.validated_data
-        return response.json()
+        return response
         
     
 

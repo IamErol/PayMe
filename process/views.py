@@ -75,12 +75,12 @@ class CardsCreate(APIView):
         # )
         
         data = {
-                "id": post_id,
+                "id": int(post_id),
                 "method": CARD_CREATE,
                 "params": {
-                            "card": { "number": validated_data['params']['card']['number'], 
-                                     "expire": validated_data['params']['card']['expire']},
-                            "save": "true"
+                            "card": { "number": str(validated_data['params']['card']['number']), 
+                                     "expire": str(validated_data['params']['card']['expire'])},
+                            "save": True
     }
         }
         response = requests.post(URL, json=data, headers=AUTHORIZATION)

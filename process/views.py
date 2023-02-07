@@ -34,8 +34,8 @@ AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'],
                                           PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 
 
-URL = 'https://checkout.paycom.uz/api'
-# URL = 'https://checkout.test.paycom.uz/api'
+# URL = 'https://checkout.paycom.uz/api'
+URL = 'https://checkout.test.paycom.uz/api'
 
 
 supabase = SupabaseActions()

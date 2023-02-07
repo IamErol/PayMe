@@ -135,9 +135,9 @@ class CardVerify(APIView):
             params=dict(
                 amount=validated_data['params']['amount'],
                 account=dict(
-                    phone = validated_data['params']['phone'],
-                    email = validated_data['params']['email'],
-                    user_id = validated_data['params']['user_id'],
+                    phone = validated_data['params']['account']['phone'],
+                    email = validated_data['params']['account']['email'],
+                    user_id = validated_data['params']['account']['user_id'],
                 )
             )
         )

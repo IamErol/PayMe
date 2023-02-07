@@ -48,12 +48,12 @@ class CardsCreate(APIView):
                              "result":result})
             
             
-        token = result['result']['card']['token']
+        # token = result['result']['card']['token']
         # result = self.receipts_create(token, serializer.validated_data, post_id)
         # if 'error' in result:
         #     return Response({"receiptscreate":result})
         
-        return Response(token)
+        return Response(result)
     
     
     def card_create(self, validated_data, post_id):

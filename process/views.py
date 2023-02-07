@@ -46,39 +46,39 @@ class CardsCreate(APIView):
     
 
 
-# class CardsCheck(APIView):
-#     '''Проводятся операции проверки удаления банковской карты клиента.
-#        Используется токен передаваемый от клиентской части.'''
+class CardsCheck(APIView):
+    '''Проводятся операции проверки удаления банковской карты клиента.
+       Используется токен передаваемый от клиентской части.'''
     
-#     def post(self, request):
-#         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
-#         serializer.is_valid(raise_exception=True)
-#         token = serializer.validated_data["info"]["token"]  # after decoding 
-#         # from json we get validated data. Validated data returns a python dictionary.
-#         result = self.cards_check(token)
+    def post(self, request):
+        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+        serializer.is_valid(raise_exception=True)
+        token = serializer.validated_data["info"]["token"]  # after decoding 
+        # from json we get validated data. Validated data returns a python dictionary.
+        result = self.cards_check(token)
         
-#         # data = supabase.process_input_data(serializer.validated_data["info"], customers_fields)
-#         # supabase.db_login()
-#         # supabase.db_save(validated_data=data, table_name='customer')
+        # data = supabase.process_input_data(serializer.validated_data["info"], customers_fields)
+        # supabase.db_login()
+        # supabase.db_save(validated_data=data, table_name='customer')
         
-#         return Response(result)
+        return Response(result)
 
 
-#     def cards_check(self, token):
+    def cards_check(self, token):
 
-#         data = {
-#                     "id": 123,
-#                     "method": "cards.check",
-#                     "params": {
-#                         "token": token
-#                     }
-#         }
-#         response = requests.post(URL, json=data, headers=AUTHORIZATION)
-#         # if 'error' in response.json():
-#         #     return response.json()
+        data = {
+                    "id": 123,
+                    "method": "cards.check",
+                    "params": {
+                        "token": token
+                    }
+        }
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        # if 'error' in response.json():
+        #     return response.json()
         
         
-#         return response
+        return response
 
 
 

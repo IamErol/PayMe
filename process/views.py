@@ -49,6 +49,7 @@ class CardsCreate(APIView):
                              "income_data":serializer.validated_data,
                              "result":result})
             
+            
         token = result['result']['card']['token']
         result = self.receipts_create(token, serializer.validated_data, post_id)
         if 'error' in result:
@@ -74,17 +75,13 @@ class CardsCreate(APIView):
         result = response.json()
 
         if 'error' in result:
-            return result
+            return HttpResponse('error in card create')
 
         token = result['result']['card']['token']
+        
+        # return token, post_id
         result = self.cards_check(token, post_id)
         return result
-        # if token:
-        #     # return Response({token})
-        #     result = self.cards_check(token, post_id)
-        #     return result
-        # else:
-        #     return Response({result})
     
     def cards_check(self, token, post_id):
         '''Проверка токена карты.'''
@@ -100,7 +97,8 @@ class CardsCreate(APIView):
         
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         if 'error' in response.json():
-            return response.json()
+            # return response.json()
+            return HttpResponse('error in card check')
         
         return response
     

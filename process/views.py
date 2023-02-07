@@ -9,11 +9,11 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from payments.settings import PAYME_SETTINGS
 import os
-# from supabase.client import Client, create_client
+from supabase.client import Client, create_client
 from dotenv import load_dotenv
 from random import randint
 load_dotenv()
-# from .models import *
+from .models import *
 
 orders_fields = ('order_amount', 'fulfillment_status', 'owner')
 transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
@@ -30,7 +30,7 @@ AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'],
 
 URL = 'https://checkout.test.paycom.uz/api'
 
-# supabase = SupabaseActions()
+supabase = SupabaseActions()
 
 class CardsCreate(APIView):
     

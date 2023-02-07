@@ -91,8 +91,8 @@ class CardsCreate(APIView):
         if 'error' in result:
             return result
 
-        # token = result['result']['card']['token']
-        return result
+        token = result['result']['card']['token']
+        # return result
         result = self.cards_check(token, post_id)
         return result
     

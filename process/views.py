@@ -127,30 +127,30 @@ class CardVerify(APIView):
         
 
 
-    # def receipts_create(self, token, validated_data):
+    def receipts_create(self, token, validated_data):
 
-    #     data = dict(
-    #         id=111222333444,
-    #         method=RECEIPTS_CREATE,
-    #         params=dict(
-    #             amount=validated_data['params']['amount'],
-    #             account=dict(
-    #                 phone = validated_data['params']['phone'],
-    #                 email = validated_data['params']['email'],
-    #                 user_id = validated_data['params']['user_id'],
-    #             )
-    #         )
-    #     )
+        data = dict(
+            id=111222333444,
+            method=RECEIPTS_CREATE,
+            params=dict(
+                amount=validated_data['params']['amount'],
+                account=dict(
+                    phone = validated_data['params']['phone'],
+                    email = validated_data['params']['email'],
+                    user_id = validated_data['params']['user_id'],
+                )
+            )
+        )
         
-    #     response = requests.post(URL, json=data, headers=AUTHORIZATION)
-    #     result = response.json()    
-    #     if 'error' in result:
-    #         return result
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()    
+        if 'error' in result:
+            return result
         
-    #     receipt_id = result['result']['receipt']['_id']
+        receipt_id = result['result']['receipt']['_id']
         
-    #     result = self.receipts_pay(receipt_id, token)
-    #     return result   
+        # result = self.receipts_pay(receipt_id, token)
+        return result   
     
     
     

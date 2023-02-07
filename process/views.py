@@ -54,10 +54,7 @@ class CardsCreate(APIView):
                              "result":result})
             
             
-        token = result['result']['card']['token']
-        # result = self.receipts_create(token, serializer.validated_data, post_id)
-        # if 'error' in result:
-        #     return Response({"receiptscreate":result})
+        # token = result['result']['card']['token']
         
         return Response(result)
     

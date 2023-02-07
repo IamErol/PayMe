@@ -144,10 +144,10 @@ PAYME_SETTINGS = {
     'DEBUG':True,   #True - test mode, False - production mode
     'PAY_ME_ID':os.getenv('PAY_ME_ID'),  
     'PAY_ME_TEST_KEY':os.getenv('PAY_ME_TEST_KEY'),
-    'ACCOUNTS':{
-        'KEY_1':'order_id',
-        'KEY_2':'',
-    }
+    # 'ACCOUNTS':{
+    #     'KEY_1':'order_id',
+    #     'KEY_2':'',
+    # }
 }
 
 CORS_ALLOWED_ORIGINS = [

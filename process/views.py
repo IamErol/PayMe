@@ -1,22 +1,19 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import JsonResponse
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import JSONRenderer
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .serializers import SubscribeSerializer
-from payments.settings import PAYME_SETTINGS
 import requests
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
-
+from payments.settings import PAYME_SETTINGS
 import os
-from supabase.client import Client, create_client
+# from supabase.client import Client, create_client
 from dotenv import load_dotenv
 from random import randint
 load_dotenv()
-from .models import *
+# from .models import *
 
 orders_fields = ('order_amount', 'fulfillment_status', 'owner')
 transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
@@ -49,120 +46,120 @@ class CardsCreate(APIView):
     
 
 
-class CardsCheck(APIView):
-    '''Проводятся операции проверки удаления банковской карты клиента.
-       Используется токен передаваемый от клиентской части.'''
+# class CardsCheck(APIView):
+#     '''Проводятся операции проверки удаления банковской карты клиента.
+#        Используется токен передаваемый от клиентской части.'''
     
-    def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
-        serializer.is_valid(raise_exception=True)
-        token = serializer.validated_data["info"]["token"]  # after decoding 
-        # from json we get validated data. Validated data returns a python dictionary.
-        result = self.cards_check(token)
+#     def post(self, request):
+#         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+#         serializer.is_valid(raise_exception=True)
+#         token = serializer.validated_data["info"]["token"]  # after decoding 
+#         # from json we get validated data. Validated data returns a python dictionary.
+#         result = self.cards_check(token)
         
-        # data = supabase.process_input_data(serializer.validated_data["info"], customers_fields)
-        # supabase.db_login()
-        # supabase.db_save(validated_data=data, table_name='customer')
+#         # data = supabase.process_input_data(serializer.validated_data["info"], customers_fields)
+#         # supabase.db_login()
+#         # supabase.db_save(validated_data=data, table_name='customer')
         
-        return Response(result)
+#         return Response(result)
 
 
-    def cards_check(self, token):
+#     def cards_check(self, token):
 
-        data = {
-                    "id": 123,
-                    "method": "cards.check",
-                    "params": {
-                        "token": token
-                    }
-        }
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        # if 'error' in response.json():
-        #     return response.json()
+#         data = {
+#                     "id": 123,
+#                     "method": "cards.check",
+#                     "params": {
+#                         "token": token
+#                     }
+#         }
+#         response = requests.post(URL, json=data, headers=AUTHORIZATION)
+#         # if 'error' in response.json():
+#         #     return response.json()
         
         
-        return response
+#         return response
 
 
 
-class CardsRemove(APIView):
-    '''Проводятся операции удаления банковской карты клиента. 
-    Используется токен передаваемый от клиентской части.'''
+# class CardsRemove(APIView):
+#     '''Проводятся операции удаления банковской карты клиента. 
+#     Используется токен передаваемый от клиентской части.'''
     
-    def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
-        serializer.is_valid()
-        token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
-        result = self.cards_remove(token)    
-        return Response(result)
+#     def post(self, request):
+#         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+#         serializer.is_valid()
+#         token = serializer.validated_data["info"]["token"]  # after decoding from json we get validated data. Validated data returns a python dictionary.
+#         result = self.cards_remove(token)    
+#         return Response(result)
 
-    def cards_remove(self, token, ):
+#     def cards_remove(self, token, ):
 
-        data = {
-                    "id": 123,
-                    "method": "cards.remove",
-                    "params": {
-                        "token": token
-                    }
-        }
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response
+#         data = {
+#                     "id": 123,
+#                     "method": "cards.remove",
+#                     "params": {
+#                         "token": token
+#                     }
+#         }
+#         response = requests.post(URL, json=data, headers=AUTHORIZATION)
+#         result = response
 
 
 
-class Receipts(APIView):
+# class Receipts(APIView):
     
-    def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
-        serializer.is_valid()
-        result = self.receipts_create(serializer.validated_data)
-        return Response(result)
-        # token = serializer.validated_data["info"]["token"]  # after decoding 
-        # from json we get validated data. Validated data returns a python dictionary.
+#     def post(self, request):
+#         serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+#         serializer.is_valid()
+#         result = self.receipts_create(serializer.validated_data)
+#         return Response(result)
+#         # token = serializer.validated_data["info"]["token"]  # after decoding 
+#         # from json we get validated data. Validated data returns a python dictionary.
         
         
-    def receipts_create(self, validated_data):
+#     def receipts_create(self, validated_data):
         
-        data = {    
-                "id": 123,
-                "method": "receipts.create",
-                "params":{
-                            "amount": validated_data["params"]["amount"],
-                            "account":  {
-                                            "user_id" : validated_data["params"]["account"]["user_id"],
-                                            "email" : validated_data["params"]["account"]["email"],
-                                            "phone" : validated_data["params"]["account"]["phone"],
-                                        },
+#         data = {    
+#                 "id": 123,
+#                 "method": "receipts.create",
+#                 "params":{
+#                             "amount": validated_data["params"]["amount"],
+#                             "account":  {
+#                                             "user_id" : validated_data["params"]["account"]["user_id"],
+#                                             "email" : validated_data["params"]["account"]["email"],
+#                                             "phone" : validated_data["params"]["account"]["phone"],
+#                                         },
 
-                            }}
+#                             }}
         
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response.json()
-        if 'error' in result:
-            return result
+#         response = requests.post(URL, json=data, headers=AUTHORIZATION)
+#         result = response.json()
+#         if 'error' in result:
+#             return result
         
-        # database operations needed
+#         # database operations needed
         
-        result = self.receipts_pay(validated_data)
-        return result
+#         result = self.receipts_pay(validated_data)
+#         return result
 
-    def receipts_pay(self, validated_data):
+#     def receipts_pay(self, validated_data):
 
-        data = {
-                    "id": 123,
-                    "method": "receipts.pay",
-                    "params": {
-                                "id": validated_data["params"]["id"],  #ID чека
-                                "token": validated_data["params"]["token"],
-                                }
-                }
+#         data = {
+#                     "id": 123,
+#                     "method": "receipts.pay",
+#                     "params": {
+#                                 "id": validated_data["params"]["id"],  #ID чека
+#                                 "token": validated_data["params"]["token"],
+#                                 }
+#                 }
         
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response
+#         response = requests.post(URL, json=data, headers=AUTHORIZATION)
+#         result = response
 
 
-    def receipts_send(self, request):
-        ...
+#     def receipts_send(self, request):
+#         ...
 
 
 

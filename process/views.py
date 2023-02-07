@@ -85,7 +85,7 @@ class CardsCreate(APIView):
                             # "save": bool(validated_data['params']['save'])
     }
         }
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        response = requests.post(URL, json=data, headers={'X-Auth':'63dcdc6e97d3387846a7ee2e'})
         result = response.json()
 
         if 'error' in result:

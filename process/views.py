@@ -107,7 +107,7 @@ class CardsCreate(APIView):
             )
         )
         
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        response = requests.post(URL, json=data, headers={'X-Auth':'63db5082f0a18aaf5ec5bb3b'})
         result = response.json()
         if 'error' in result:
             return result

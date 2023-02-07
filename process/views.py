@@ -97,6 +97,87 @@ class CardsCreate(APIView):
         result.update(token=token)
         return result    
     
+
+    
+class CardVerify(APIView):
+
+    def post(self, request):
+        serializer = SubscribeSerializer(data=request.data, many=False)
+        serializer.is_valid(raise_exception=True)
+        result = self.card_verify(serializer.validated_data)
+        return Response(result)
+
+    def card_verify(self, validated_data):
+        data = dict(
+            id=111222333444,
+            method=CARD_VERIFY,
+            params=dict(
+                token=validated_data['params']['token'],
+                code=validated_data['params']['code'],
+            )
+        )
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()
+        if 'error' in result:
+            return result
+
+        token = result['result']['card']['token']
+        # result = self.receipts_create(token, validated_data)
+        return result
+        
+
+
+    # def receipts_create(self, token, validated_data):
+
+    #     data = dict(
+    #         id=111222333444,
+    #         method=RECEIPTS_CREATE,
+    #         params=dict(
+    #             amount=validated_data['params']['amount'],
+    #             account=dict(
+    #                 phone = validated_data['params']['phone'],
+    #                 email = validated_data['params']['email'],
+    #                 user_id = validated_data['params']['user_id'],
+    #             )
+    #         )
+    #     )
+        
+    #     response = requests.post(URL, json=data, headers=AUTHORIZATION)
+    #     result = response.json()    
+    #     if 'error' in result:
+    #         return result
+        
+    #     receipt_id = result['result']['receipt']['_id']
+        
+    #     result = self.receipts_pay(receipt_id, token)
+    #     return result   
+    
+    
+    
+    # def receipts_pay(self, receipt_id, token):
+    #     data = dict(
+    #         id=111222333444,
+    #         method=RECEIPTS_PAY,
+    #         params=dict(
+    #             id=receipt_id,
+    #             token=token,
+    #         )
+    #     )
+    #     response = requests.post(URL, json=data, headers=AUTHORIZATION)
+    #     result = response.json()
+
+
+    #     if 'error' in result:
+    #         return result
+
+    #     return result
+
+
+
+
+
+
+
     # def cards_check(self, token, post_id):
     #     '''Проверка токена карты.'''
 
@@ -140,90 +221,6 @@ class CardsCreate(APIView):
 #         result = response.json()
 
 #         return result
-    
-class CardVerify(APIView):
-
-    def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False)
-        serializer.is_valid(raise_exception=True)
-        # token = serializer.validated_data['params']['token']
-        result = self.card_verify(serializer.validated_data)
-        
-
-        return Response(result)
-
-    def card_verify(self, validated_data):
-        data = dict(
-            id=111222333444,
-            method=CARD_VERIFY,
-            params=dict(
-                token=validated_data['params']['token'],
-                code=validated_data['params']['code'],
-            )
-        )
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response.json()
-        if 'error' in result:
-            return result
-
-        token = result['result']['card']['token']
-        result = self.receipts_create(token, validated_data)
-        return result
-        
-
-
-    def receipts_create(self, token, validated_data):
-
-        data = dict(
-            id=111222333444,
-            method=RECEIPTS_CREATE,
-            params=dict(
-                amount=validated_data['params']['amount'],
-                account=dict(
-                    phone = validated_data['params']['phone'],
-                    email = validated_data['params']['email'],
-                    user_id = validated_data['params']['user_id'],
-                )
-            )
-        )
-        
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response.json()    
-        if 'error' in result:
-            return result
-        
-        receipt_id = result['result']['receipt']['_id']
-        
-        result = self.receipts_pay(receipt_id, token)
-        return result   
-    
-    
-    
-    def receipts_pay(self, receipt_id, token):
-        data = dict(
-            id=111222333444,
-            method=RECEIPTS_PAY,
-            params=dict(
-                id=receipt_id,
-                token=token,
-            )
-        )
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response.json()
-
-
-        if 'error' in result:
-            return result
-
-        return result
-
-
-
-
-
-
-
-
 
 
 

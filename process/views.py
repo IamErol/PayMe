@@ -40,39 +40,20 @@ class CardsCreate(APIView):
         post_id = secrets.randbits(32)
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
-        data = dict(
-            id = post_id,
-            method=CARD_CREATE,
-            params=dict(
-                card=dict(
-                    number=validated_data['params']['card']['number'],
-                    expire=validated_data['params']['card']['expire'],
-                ),
-                save=validated_data['params']['save']
-            )
-        )
-        
-        return Response({"data":data})
-        
         
         result = self.card_create(validated_data=serializer.validated_data, post_id=post_id)
-
-        # return Response({"cardcreate":result,
-        #                      "income_data":serializer.validated_data,
-        #                      "result":result})
-        # if 'error' in result:
-        #     return Response({"cardcreate":result,
-        #                      "income_data":serializer.validated_data,
-        #                      "result":result})
+        if 'error' in result:
+            return Response({"cardcreate":result,
+                             "income_data":serializer.validated_data,
+                             "result":result})
             
             
-        # token = result['result']['card']['token']
+        token = result['result']['card']['token']
         # result = self.receipts_create(token, serializer.validated_data, post_id)
         # if 'error' in result:
         #     return Response({"receiptscreate":result})
         
-        return Response(result)
+        return Response(token)
     
     
     def card_create(self, validated_data, post_id):
@@ -94,9 +75,7 @@ class CardsCreate(APIView):
         if 'error' in result:
             return HttpResponse('error in card create')
 
-        token = result['result']['card']['token']
-        
-        # return token, post_id
+        token = result['card']['token']
         result = self.cards_check(token, post_id)
         return result
     
@@ -104,7 +83,6 @@ class CardsCreate(APIView):
         '''Проверка токена карты.'''
 
         data = dict(
-            # id=validated_data['id'],
             id=post_id,
             method=CARD_CHECK,
             params=dict(
@@ -114,8 +92,8 @@ class CardsCreate(APIView):
         
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         if 'error' in response.json():
-            # return response.json()
-            return HttpResponse('error in card check')
+            return response.json()
+
         
         return response
     

@@ -45,9 +45,9 @@ class CardsCreate(APIView):
         
         result = self.card_create(validated_data=serializer.validated_data, post_id=post_id)
 
-        return Response({"cardcreate":result,
-                             "income_data":serializer.validated_data,
-                             "result":result})
+        # return Response({"cardcreate":result,
+        #                      "income_data":serializer.validated_data,
+        #                      "result":result})
         # if 'error' in result:
         #     return Response({"cardcreate":result,
         #                      "income_data":serializer.validated_data,

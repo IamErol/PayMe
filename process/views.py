@@ -87,9 +87,12 @@ class CardsCreate(APIView):
             return result
 
         token = result['result']['card']['token']
-        result = self.cards_check(token, post_id)
+        if token:
+            result = self.cards_check(token, post_id)
 
-        return result
+            return result
+        else:
+            return Response({result})
     
     def cards_check(self, token, post_id):
         '''Проверка токена карты.'''

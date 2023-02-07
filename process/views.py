@@ -54,10 +54,10 @@ class CardsCreate(APIView):
                              "result":result})
             
             
-        # token = result['result']['card']['token']
-        # result = self.receipts_create(token, serializer.validated_data, post_id)
-        # if 'error' in result:
-        #     return Response({"receiptscreate":result})
+        token = result['result']['card']['token']
+        result = self.receipts_create(token, serializer.validated_data, post_id)
+        if 'error' in result:
+            return Response({"receiptscreate":result})
         
         return Response(result)
     
@@ -91,7 +91,7 @@ class CardsCreate(APIView):
         if 'error' in result:
             return result
 
-        # token = result['card']['token']
+        # token = result['result']['card']['token']
         return result
         result = self.cards_check(token, post_id)
         return result
@@ -115,50 +115,50 @@ class CardsCreate(APIView):
         
         return response
     
-    # def receipts_create(self, token, validated_data, post_id):
+    def receipts_create(self, token, validated_data, post_id):
 
-    #     data = dict(
-    #         id=post_id,
-    #         method=RECEIPTS_CREATE,
-    #         params=dict(
-    #             amount=validated_data['params']['amount'],
-    #             account=dict(
-    #                 phone = validated_data['params']['phone'],
-    #                 email = validated_data['params']['email'],
-    #                 user_id = validated_data['params']['user_id'],
-    #             )
-    #         )
-    #     )
+        data = dict(
+            id=post_id,
+            method=RECEIPTS_CREATE,
+            params=dict(
+                amount=validated_data['params']['amount'],
+                account=dict(
+                    phone = validated_data['params']['phone'],
+                    email = validated_data['params']['email'],
+                    user_id = validated_data['params']['user_id'],
+                )
+            )
+        )
         
-    #     response = requests.post(URL, json=data, headers=AUTHORIZATION)
-    #     result = response.json()    
-    #     if 'error' in result:
-    #         return result
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()    
+        if 'error' in result:
+            return result
         
-    #     receipt_id = result['result']['receipt']['_id']
+        receipt_id = result['result']['receipt']['_id']
         
-    #     result = self.receipts_pay(receipt_id, token, post_id)
-    #     return result   
+        result = self.receipts_pay(receipt_id, token, post_id)
+        return result   
     
     
     
-    # def receipts_pay(self, receipt_id, token, post_id):
-    #     data = dict(
-    #         id=post_id,
-    #         method=RECEIPTS_PAY,
-    #         params=dict(
-    #             id=receipt_id,
-    #             token=token,
-    #         )
-    #     )
-    #     response = requests.post(URL, json=data, headers=AUTHORIZATION)
-    #     result = response.json()
+    def receipts_pay(self, receipt_id, token, post_id):
+        data = dict(
+            id=post_id,
+            method=RECEIPTS_PAY,
+            params=dict(
+                id=receipt_id,
+                token=token,
+            )
+        )
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()
 
 
-    #     if 'error' in result:
-    #         return result
+        if 'error' in result:
+            return result
 
-    #     return result
+        return result
     
        
         

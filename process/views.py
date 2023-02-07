@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 from random import randint
 load_dotenv()
 from .models import *
+from .pay_me_methds import *
+import secrets
 
 orders_fields = ('order_amount', 'fulfillment_status', 'owner')
 transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
@@ -35,13 +37,164 @@ supabase = SupabaseActions()
 class CardsCreate(APIView):
     
     def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+        post_id = secrets.randbits(32)
+        serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
+        token, post_id = self.card_create(serializer.validated_data, post_id)
+        result = self.receipts_create(token, serializer.validated_data, post_id)
+        return Response(result)
     
-    # def post(self, request):
-    #     data = request.data
-    #     return Response({'If you see it then, it is working': data})
+
+    
+    def card_create(self, validated_data, post_id):
+        '''Создание токена пластиковой карыт.'''
+        data = dict(
+            # id=validated_data['id'],
+            id = post_id,
+            method=CARD_CREATE,
+            params=dict(
+                card=dict(
+                    number=validated_data['params']['card']['number'],
+                    expire=validated_data['params']['card']['expire'],
+                ),
+                # amount=validated_data['params']['amount'],
+                save=validated_data['params']['save']
+            )
+        )
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()
+#        result = {
+#                "jsonrpc": "2.0",
+#                "id": 123,
+#                "result": {
+#                    "card": {
+#                        "number": "860006******6311",
+#                        "expire": "03/99",
+#                        "token": "NTg0YTg0ZDYyYWJi",
+#                        "recurrent": true,
+#                        "verify": false
+#         }
+#     }
+# }
+        if 'error' in result:
+            return result
+
+        token = result['result']['card']['token']
+        result = self.cards_check(token, post_id)
+
+        return result
+    
+    def cards_check(self, token, post_id):
+        '''Проверка токена карты.'''
+
+        data = dict(
+            # id=validated_data['id'],
+            id=post_id,
+            method=CARD_CHECK,
+            params=dict(
+                        token=token
+            )
+        )
+
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        if 'error' in response.json():
+            return response.json()
+        
+        
+        return response
+    
+    def receipts_create(self, token, validated_data, post_id):
+
+        data = dict(
+            id=post_id,
+            method=RECEIPTS_CREATE,
+            params=dict(
+                amount=validated_data['params']['amount'],
+                account=dict(
+                    phone = validated_data['params']['phone'],
+                    email = validated_data['params']['email'],
+                    user_id = validated_data['params']['user_id'],
+                )
+            )
+        )
+        
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()    
+        if 'error' in result:
+            return result
+        
+        receipt_id = result['result']['receipt']['_id']
+        
+        result = self.receipts_pay(receipt_id, token, post_id)
+        return result   
+    
+    
+    
+    def receipts_pay(self, receipt_id, token, post_id):
+        data = dict(
+            id=post_id,
+            method=RECEIPTS_PAY,
+            params=dict(
+                id=receipt_id,
+                token=token,
+            )
+        )
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()
+
+
+        if 'error' in result:
+            return result
+
+        return result
+    
+       
+        
+        
+        
+        
+        
+           
+    # def card_get_verify_code(self, token):
+    #     data = dict(
+    #         method=CARD_GET_VERIFY_CODE,
+    #         params=dict(
+    #             token=token
+    #         )
+    #     )
+    #     response = requests.post(URL, json=data, headers=AUTHORIZATION)
+    #     result = response.json()
+    #     if 'error' in result:
+    #         return result
+
+    #     result.update(token=token)
+    #     return result
+
+
+# class CardsVerify(APIView):
+
+#     def post(self, request):
+#         serializer = SubscribeSerializer(data=request.data, many=False)
+#         serializer.is_valid(raise_exception=True)
+#         result = self.card_verify(serializer.validated_data)
+
+#         return Response(result)
+
+#     def card_verify(self, validated_data):
+#         data = dict(
+#             # id=validated_data['id'],
+#             id=secrets.randbits(32),
+#             method=CARD_VERIFY,
+#             params=dict(
+#                 token=validated_data['params']['token'],
+#                 code=validated_data['params']['code'],
+#             )
+#         )
+#         response = requests.post(URL, json=data, headers=AUTHORIZATION)
+#         result = response.json()
+
+#         return result
+    
         
     
 
@@ -66,16 +219,19 @@ class CardsCheck(APIView):
 
     def cards_check(self, token):
 
-        data = {
-                    "id": 123,
-                    "method": "cards.check",
-                    "params": {
-                        "token": token
-                    }
-        }
+
+        data = dict(
+            # id=validated_data['id'],
+            id=secrets.randbits(32),
+            method=CARD_CHECK,
+            params=dict(
+                        token=token
+            )
+        )
+
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        # if 'error' in response.json():
-        #     return response.json()
+        if 'error' in response.json():
+            return response.json()
         
         
         return response
@@ -281,3 +437,10 @@ def main(request):
 #         response = requests.post(URL, json=data, headers=AUTHORIZATION)
 #         result = response.json()
 #         return result
+
+
+
+
+# def post(self, request):
+#     data = request.data
+#     return Response({'If you see it then, it is working': data})

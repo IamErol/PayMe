@@ -68,7 +68,6 @@ class CardsCreate(APIView):
                 "params": {
                             "card": { "number": str(validated_data['params']['card']['number']), 
                                      "expire": str(validated_data['params']['card']['expire'])},
-                            # "save": validated_data['params']['save']
     }
         }
         response = requests.post(URL, json=data, headers={'X-Auth':'63db5082f0a18aaf5ec5bb3b'})
@@ -147,7 +146,7 @@ class CardVerify(APIView):
     def post(self, request):
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
-        token = serializer.validated_data['params']['token']
+        # token = serializer.validated_data['params']['token']
         result = self.card_verify(serializer.validated_data)
         
 

@@ -37,10 +37,14 @@ URL = 'https://checkout.test.paycom.uz/api'
 
 class CardsCreate(APIView):
     
+    # def post(self, request):
+    #     serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+    #     serializer.is_valid(raise_exception=True)
+    #     return Response(serializer.data)
+    
     def post(self, request):
-        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
+        data = request.data
+        return Response({'If you see it then, it is working': data})
         
     
 
@@ -212,10 +216,10 @@ class Receipts(APIView):
 #         return Response(token)
     
     
-#     def card_check(self, token)
-#     # def post(self, request):
-#     #     message = request.data.get("token")
-#     #     return Response({'token': message})
+    # def card_check(self, token)
+    # def post(self, request):
+    #     message = request.data.get("token")
+    #     return Response({'If you see it then, it is working': message})
 
 # class CardsRemove(APIView):
 #     '''Удаляем токен пластиковокй карты от фронта'''

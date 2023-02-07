@@ -48,6 +48,7 @@ class CardsCreate(APIView):
             return Response({"cardcreate":result,
                              "income_data":serializer.validated_data,
                              "result":result})
+            
         token = result['result']['card']['token']
         result = self.receipts_create(token, serializer.validated_data, post_id)
         if 'error' in result:
@@ -66,30 +67,17 @@ class CardsCreate(APIView):
                     number=validated_data['params']['card']['number'],
                     expire=validated_data['params']['card']['expire'],
                 ),
-                # amount=validated_data['params']['amount'],
                 save=validated_data['params']['save']
             )
         )
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()
-#        result = {
-#                "jsonrpc": "2.0",
-#                "id": 123,
-#                "result": {
-#                    "card": {
-#                        "number": "860006******6311",
-#                        "expire": "03/99",
-#                        "token": "NTg0YTg0ZDYyYWJi",
-#                        "recurrent": true,
-#                        "verify": false
-#         }
-#     }
-# }
+
         if 'error' in result:
-            # return result
-            return Response({"data": data})
+            return result
+
         token = result['result']['card']['token']
-        return Response({token})
+
         if token:
             return Response({token})
             result = self.cards_check(token, post_id)

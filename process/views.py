@@ -40,7 +40,12 @@ class CardsCreate(APIView):
         post_id = secrets.randbits(32)
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
-        token, post_id = self.card_create(serializer.validated_data, post_id)
+        
+        
+        result = self.card_create(serializer.validated_data, post_id)
+        if 'error' in result:
+            return Response(result)
+        token = result['result']['card']['token']
         result = self.receipts_create(token, serializer.validated_data, post_id)
         if 'error' in result:
             return Response(result)

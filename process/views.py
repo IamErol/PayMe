@@ -122,22 +122,22 @@ class CardVerify(APIView):
             return result
 
         token = result['result']['card']['token']
-        # result = self.receipts_create(token, validated_data)
+        result = self.receipts_create(validated_data)
         return result
         
 
 
-    def receipts_create(self, token, validated_data):
+    def receipts_create(self, validated_data):
 
         data = dict(
             id=111222333444,
             method=RECEIPTS_CREATE,
             params=dict(
-                amount=validated_data['params']['amount'],
+                amount=float(validated_data['params']['amount']),
                 account=dict(
-                    phone = validated_data['params']['account']['phone'],
-                    email = validated_data['params']['account']['email'],
-                    user_id = validated_data['params']['account']['user_id'],
+                    phone = str(validated_data['params']['account']['phone']),
+                    email = str(validated_data['params']['account']['email']),
+                    user_id = int(validated_data['params']['account']['user_id']),
                 )
             )
         )

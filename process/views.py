@@ -73,7 +73,7 @@ class CardsCreate(APIView):
         result = response.json()
 
         if 'error' in result:
-            return HttpResponse('error in card create')
+            return result
 
         token = result['card']['token']
         result = self.cards_check(token, post_id)
@@ -91,8 +91,9 @@ class CardsCreate(APIView):
         )
         
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        if 'error' in response.json():
-            return response.json()
+        result = response.json()
+        if 'error' in result:
+            return result
 
         
         return response

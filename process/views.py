@@ -88,6 +88,7 @@ class CardsCreate(APIView):
 
         token = result['result']['card']['token']
         if token:
+            return Response({token})
             result = self.cards_check(token, post_id)
 
             return result

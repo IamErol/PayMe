@@ -81,8 +81,9 @@ class CardsCreate(APIView):
             return result
 
         token = result['result']['card']['token']
-        result = self.card_get_verify_code(token)
-        return result
+        if token:
+            result = self.card_get_verify_code(token)
+            return result
     
     def card_get_verify_code(self, token):
         data = dict(

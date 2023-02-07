@@ -34,14 +34,14 @@ supabase = SupabaseActions()
 
 class CardsCreate(APIView):
     
-    # def post(self, request):
-    #     serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
-    #     serializer.is_valid(raise_exception=True)
-    #     return Response(serializer.data)
-    
     def post(self, request):
-        data = request.data
-        return Response({'If you see it then, it is working': data})
+        serializer = SubscribeSerializer(data=request.data, many=False) #data = dict object from request
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
+    
+    # def post(self, request):
+    #     data = request.data
+    #     return Response({'If you see it then, it is working': data})
         
     
 

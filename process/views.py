@@ -55,9 +55,9 @@ class CardsCreate(APIView):
             
             
         token = result['result']['card']['token']
-        result = self.receipts_create(token, serializer.validated_data, post_id)
-        if 'error' in result:
-            return Response({"receiptscreate":result})
+        # result = self.receipts_create(token, serializer.validated_data, post_id)
+        # if 'error' in result:
+        #     return Response({"receiptscreate":result})
         
         return Response(result)
     
@@ -81,8 +81,24 @@ class CardsCreate(APIView):
             return result
 
         token = result['result']['card']['token']
-        result = self.cards_check(token, post_id)
+        result = self.card_get_verify_code(token, post_id)
         return result
+    
+    def card_get_verify_code(self, token, post_id):
+        data = dict(
+            id=post_id,
+            method=CARD_GET_VERIFY_CODE,
+            params=dict(
+                token=token
+            )
+        )
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()
+        if 'error' in result:
+            return result
+
+        result.update(token=token)
+        return result    
     
     def cards_check(self, token, post_id):
         '''Проверка токена карты.'''
@@ -103,10 +119,37 @@ class CardsCreate(APIView):
         
         return response
     
+    
+class CardVerify(APIView):
+
+    def post(self, request):
+        serializer = SubscribeSerializer(data=request.data, many=False)
+        serializer.is_valid(raise_exception=True)
+        result = self.card_verify(serializer.validated_data)
+
+        return Response(result)
+
+    def card_verify(self, validated_data):
+        data = dict(
+            id=111222333444,
+            method=CARD_VERIFY,
+            params=dict(
+                token=validated_data['params']['token'],
+                code=validated_data['params']['code'],
+            )
+        )
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()
+
+        return result
+    
+   
+class Receipts(APIView): 
+   
     def receipts_create(self, token, validated_data, post_id):
 
         data = dict(
-            id=post_id,
+            id=111222333444,
             method=RECEIPTS_CREATE,
             params=dict(
                 amount=validated_data['params']['amount'],
@@ -132,7 +175,7 @@ class CardsCreate(APIView):
     
     def receipts_pay(self, receipt_id, token, post_id):
         data = dict(
-            id=post_id,
+            id=111222333444,
             method=RECEIPTS_PAY,
             params=dict(
                 id=receipt_id,

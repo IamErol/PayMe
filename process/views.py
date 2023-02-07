@@ -81,10 +81,10 @@ class CardsCreate(APIView):
             return result
 
         token = result['result']['card']['token']
-        result = self.card_get_verify_code(token, post_id)
+        result = self.card_get_verify_code(token)
         return result
     
-    def card_get_verify_code(self, token, post_id):
+    def card_get_verify_code(self, token):
         data = dict(
             id=123123123,
             method=CARD_GET_VERIFY_CODE,
@@ -92,7 +92,7 @@ class CardsCreate(APIView):
                 token=token
             )
         )
-        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        response = requests.post(URL, json=data, headers={'X-Auth':'63db5082f0a18aaf5ec5bb3b'})
         result = response.json()
         if 'error' in result:
             return result

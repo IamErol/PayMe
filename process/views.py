@@ -17,6 +17,10 @@ from .models import *
 from .pay_me_methds import *
 import secrets
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 orders_fields = ('order_amount', 'fulfillment_status', 'owner')
 transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
 customers_fields = ('full_name', 'email', 'phone', 'address')
@@ -43,7 +47,7 @@ class CardsCreate(APIView):
         
         result = self.card_create(validated_data=serializer.validated_data, post_id=post_id)
         if 'error' in result:
-            return Response({"cardcreate":result,
+            return Response({
                              "income_data":serializer.validated_data,
                              "result":result})
             
@@ -76,6 +80,7 @@ class CardsCreate(APIView):
             return result
 
         token = result['card']['token']
+        return token
         result = self.cards_check(token, post_id)
         return result
     

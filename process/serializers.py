@@ -5,5 +5,5 @@ from rest_framework import serializers
 
 class SubscribeSerializer(serializers.Serializer):
     # id = serializers.IntegerField()
-    info = serializers.JSONField()  #validates if data in json format
+    params = serializers.JSONField()  #validates if data in json format
     

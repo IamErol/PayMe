@@ -82,7 +82,7 @@ class CardsCreate(APIView):
                 "params": {
                             "card": { "number": str(validated_data['params']['card']['number']), 
                                      "expire": str(validated_data['params']['card']['expire'])},
-                            # "save": bool(validated_data['params']['save'])
+                            "save": bool(validated_data['params']['save'])
     }
         }
         response = requests.post(URL, json=data, headers={'X-Auth':'63db5082f0a18aaf5ec5bb3b'})
@@ -92,7 +92,6 @@ class CardsCreate(APIView):
             return result
 
         token = result['result']['card']['token']
-        # return result
         result = self.cards_check(token, post_id)
         return result
     

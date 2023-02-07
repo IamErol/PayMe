@@ -62,17 +62,27 @@ class CardsCreate(APIView):
     
     def card_create(self, validated_data, post_id):
         '''Создание токена пластиковой карыт.'''
-        data = dict(
-            id = post_id,
-            method=CARD_CREATE,
-            params=dict(
-                card=dict(
-                    number=validated_data['params']['card']['number'],
-                    expire=validated_data['params']['card']['expire'],
-                ),
-                save=validated_data['params']['save']
-            )
-        )
+        # data = dict(
+        #     id = post_id,
+        #     method=CARD_CREATE,
+        #     params=dict(
+        #         card=dict(
+        #             number=validated_data['params']['card']['number'],
+        #             expire=validated_data['params']['card']['expire'],
+        #         ),
+        #         save=validated_data['params']['save']
+        #     )
+        # )
+        
+        data = {
+                "id": post_id,
+                "method": CARD_CREATE,
+                "params": {
+                            "card": { "number": validated_data['params']['card']['number'], 
+                                     "expire": validated_data['params']['card']['expire']},
+                            "save": "true"
+    }
+        }
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()
 

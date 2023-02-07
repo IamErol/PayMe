@@ -80,7 +80,7 @@ class CardsCreate(APIView):
                 "params": {
                             "card": { "number": str(validated_data['params']['card']['number']), 
                                      "expire": str(validated_data['params']['card']['expire'])},
-                            "save": True
+                            "save": bool((validated_data['params']['save']))
     }
         }
         response = requests.post(URL, json=data, headers=AUTHORIZATION)

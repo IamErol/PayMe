@@ -42,7 +42,8 @@ class CardsCreate(APIView):
         serializer.is_valid(raise_exception=True)
         
         
-        result = self.card_create(serializer.validated_data, post_id)
+        
+        result = self.card_create(validated_data=serializer.validated_data, post_id=post_id)
         if 'error' in result:
             return Response({"cardcreate":result,
                              "income_data":serializer.validated_data,
@@ -58,7 +59,6 @@ class CardsCreate(APIView):
     def card_create(self, validated_data, post_id):
         '''Создание токена пластиковой карыт.'''
         data = dict(
-            # id=validated_data['id'],
             id = post_id,
             method=CARD_CREATE,
             params=dict(

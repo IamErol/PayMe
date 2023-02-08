@@ -66,7 +66,8 @@ class CardsCreate(APIView):
         '''Создание токена пластиковой карыт.'''
        
         data = {
-                "id": int(post_id),
+                "id": 123123123,
+                # "id": int(post_id),
                 "method": CARD_CREATE,
                 "params": {
                             "card": { "number": str(validated_data['params']['card']['number']), 
@@ -114,7 +115,7 @@ class CardVerify(APIView):
 
     def card_verify(self, validated_data):
         data = dict(
-            id=111222333444,
+            id=123123123,
             method=CARD_VERIFY,
             params=dict(
                 token=validated_data['params']['token'],
@@ -132,15 +133,35 @@ class CardVerify(APIView):
             return result
 
         
-        result = self.receipts_create(validated_data)
+        result = self.cards_check(validated_data)
         return result
+    
+    def cards_check(self, validated_data):
+        '''Проверка токена карты.'''
+
+        data = dict(
+            id=123123123,
+            method=CARD_CHECK,
+            params=dict(
+                        token=validated_data['params']['token']
+            )
+        )
+        
+        response = requests.post(URL, json=data, headers=FRONT_AUTH)
+        result = response.json()
+        if 'error' in result:
+            result.update(fail='cards check')
+            return result
+
+        result = self.receipts_create(validated_data)
+        return response
         
 
 
     def receipts_create(self, validated_data):
 
         data = dict(
-            id=111222333444,
+            id=123123123,
             method=RECEIPTS_CREATE,
             params=dict(
                 amount=float(validated_data['params']['amount']),
@@ -174,7 +195,7 @@ class CardVerify(APIView):
     
     def receipts_pay(self, receipt_id, token):
         data = dict(
-            id=111222333444,
+            id=123123123,
             method=RECEIPTS_PAY,
             params=dict(
                 id=str(receipt_id),
@@ -196,7 +217,7 @@ class CardVerify(APIView):
 
     def card_remove(self, token):
         data = dict(
-            id=111222333444,
+            id=123123123,
             method=CARD_REMOVE,
             params=dict(
                 token=token,

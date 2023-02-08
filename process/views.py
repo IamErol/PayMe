@@ -237,7 +237,7 @@ class CardVerify(APIView):
         if 'error' in result:
             result.update(token=token, fail='remove')
             return result
-        
+        result.update(cardremoved='cardremoved')
         return result
 
     #     token = result['result']['card']['token']

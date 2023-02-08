@@ -118,7 +118,7 @@ class CardVerify(APIView):
         )
         response = requests.post(URL, json=data, headers={'X-Auth':'63e371fb1afcb4de778fe871'})
         result = response.json()
-        token = result['result']['card']['token'] 
+        token = validated_data['params']['token'] 
         if 'error' in result:
             result = self.card_remove(token)
             return result
@@ -146,7 +146,7 @@ class CardVerify(APIView):
         
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()   
-        token = result['result']['card']['token'] 
+        token=validated_data['params']['token']
         if 'error' in result:
             result = self.card_remove(token)
             return result

@@ -154,23 +154,23 @@ class CardVerify(APIView):
     
     
     
-    # def receipts_pay(self, receipt_id, token):
-    #     data = dict(
-    #         id=111222333444,
-    #         method=RECEIPTS_PAY,
-    #         params=dict(
-    #             id=receipt_id,
-    #             token=token,
-    #         )
-    #     )
-    #     response = requests.post(URL, json=data, headers=AUTHORIZATION)
-    #     result = response.json()
+    def receipts_pay(self, receipt_id, token):
+        data = dict(
+            id=111222333444,
+            method=RECEIPTS_PAY,
+            params=dict(
+                id=receipt_id,
+                token=token,
+            )
+        )
+        response = requests.post(URL, json=data, headers=AUTHORIZATION)
+        result = response.json()
 
 
-    #     if 'error' in result:
-    #         return result
+        if 'error' in result:
+            return result
 
-    #     return result
+        return result
 
 
     # def card_remove(self, validated_data):

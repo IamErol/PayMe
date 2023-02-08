@@ -33,9 +33,9 @@ customers_fields = ('full_name', 'email', 'phone', 'address')
 # AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], 
 #                                           PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 
-AUTHORIZATION = {'X-Auth': '63e371fb1afcb4de778fe871:oUn6wfLBI12L43AY0jrJQ8GSdDrV0mLnMGwd'}# test virtual terminal
+AUTHORIZATION = {'X-Auth': '63e3720d1afcb4de778fe872:oUn6wfLBI12L43AY0jrJQ8GSdDrV0mLnMGwd'}# test virtual terminal
 
-FRONT_AUTH = {'X-Auth':'63e371fb1afcb4de778fe871'}
+FRONT_AUTH = {'X-Auth':'63e3720d1afcb4de778fe872'}
 
 # URL = 'https://checkout.paycom.uz/api'
 URL = 'https://checkout.test.paycom.uz/api'
@@ -153,7 +153,8 @@ class CardVerify(APIView):
         )
         
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
-        result = response.json()   
+        result = response.json()  
+        receipt = result 
         
         token=validated_data['params']['token']
         if 'error' in result:
@@ -164,7 +165,9 @@ class CardVerify(APIView):
         receipt_id = result['result']['receipt']['_id']
         token=validated_data['params']['token']
         
+        
         result = self.receipts_pay(receipt_id, token)
+        result.update(receipt=receipt)
         return result   
     
     
@@ -185,7 +188,7 @@ class CardVerify(APIView):
         if 'error' in result:
             data = result
             result = self.card_remove(token)
-            result.update(fail='pay', data=data, token=token, receipt_id=receipt_id)
+            result.update(fail='pay', data=data, token=token, receipt_id=receipt_id, auth=AUTHORIZATION)
             return result
 
         return result

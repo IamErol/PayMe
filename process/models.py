@@ -1,6 +1,6 @@
 from django.db import models
 import os
-from supabase.client import create_client, Client
+from supabase.client import Client, create_client
 from dotenv import load_dotenv
 from random import randint
 load_dotenv()
@@ -24,11 +24,11 @@ class SupabaseActions:
         self.email = email
         self.password = password
         
-    # def db_login(self):
-    #     supabase: Client = create_client(self.url, self.key)
-    #     supabase.auth.sign_out()
-    #     session = supabase.auth.sign_in(email=self.email, password=self.password)
-    #     return supabase
+    def db_login(self):
+        supabase: Client = create_client(self.url, self.key)
+        supabase.auth.sign_out()
+        session = supabase.auth.sign_in(email=self.email, password=self.password)
+        return supabase
     
         
     def process_input_data(self, validated_data: dict, fields: tuple) -> dict:

@@ -1,12 +1,7 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import SubscribeSerializer
 import requests
-from rest_framework.parsers import JSONParser 
-from rest_framework import status
 from payments.settings import PAYME_SETTINGS
 import os
 from supabase.client import Client, create_client
@@ -15,6 +10,7 @@ from random import randint
 load_dotenv()
 from .models import *
 from .pay_me_methds import *
+from . import post_calls
 import secrets
 
 import logging
@@ -48,13 +44,15 @@ supabase = SupabaseActions()
 class CardsCreate(APIView):
     
     def post(self, request):
-        post_id = secrets.randbits(32)
+        post_id = secrets.randbits(32) # generating id number for post requests to PayMe.
+        
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
-        validated_data.update(post_id=str(post_id))
         
-        result = self.card_create(validated_data=validated_data)
+        validated_data = serializer.validated_data
+        validated_data.update(post_id=str(post_id)) # including id number for future post requests to PayMe.
+        
+        result = self.card_create(validated_data=validated_data) # calling card creation.
         if 'error' in result:
             return Response({
                              "income_data":validated_data,
@@ -65,41 +63,46 @@ class CardsCreate(APIView):
     
     
     def card_create(self, validated_data):
-        '''Создание токена пластиковой карыт.'''
+        '''Создание токена пластиковой карты.'''
        
-        data = {
-                "id": int(validated_data['post_id']),
-                "method": CARD_CREATE,
-                "params": {
-                            "card": { "number": str(validated_data['params']['card']['number']), 
-                                      "expire": str(validated_data['params']['card']['expire'])},
-    }
-        }
-        response = requests.post(URL, json=data, headers=FRONT_AUTH)
-        result = response.json() # -> result (python dictionary)
+    #     data = {
+    #             "id": int(validated_data['post_id']),
+    #             "method": CARD_CREATE,
+    #             "params": {
+    #                         "card": { "number": str(validated_data['params']['card']['number']), 
+    #                                   "expire": str(validated_data['params']['card']['expire'])},
+    #                       }
+    #             }
+    #     response = requests.post(URL, json=data, headers=FRONT_AUTH)
+    #     result = response.json() # -> result (python dictionary)
+    
+        result = post_calls.post_card_create(validated_data, URL, AUTHORIZATION)
 
         if 'error' in result:
             result.update(fail='at card_create')
             return result
 
         token = result['result']['card']['token']
-        if token:
-            result = self.card_get_verify_code(token, validated_data)
-            
-            result.update(post_id=(validated_data['post_id']))
-            return result
+        
+        result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
+        
+        # result.update(post_id=(validated_data['post_id']))
+        return result  # returns messge sent status.
     
     def card_get_verify_code(self, token, validated_data):
+        '''Получение смс кода для верификации карты.'''
         
-        data = dict(
-            id=int(validated_data['post_id']),
-            method=CARD_GET_VERIFY_CODE,
-            params=dict(
-                token=token
-            )
-        )
-        response = requests.post(URL, json=data, headers=FRONT_AUTH)
-        result = response.json() # -> result (python dictionary)
+        # data = dict(
+        #     id=int(validated_data['post_id']),
+        #     method=CARD_GET_VERIFY_CODE,
+        #     params=dict(
+        #         token=token
+        #     )
+        # )
+        # response = requests.post(URL, json=data, headers=FRONT_AUTH)
+        # result = response.json() # -> result (python dictionary)
+        
+        result = post_calls.post_card_get_verify_code(validated_data, token, URL, FRONT_AUTH)
         
         if 'error' in result:
             result.update(fail='card_get_verify_code')
@@ -113,13 +116,20 @@ class CardsCreate(APIView):
 class CardVerify(APIView):
 
     def post(self, request):
+        '''
+        Takes post request from client and sends post request to PayMe.
+        '''
+            
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
-        result = self.card_verify(serializer.validated_data)
         validated_data = serializer.validated_data
-        return Response(result)
+        
+        result = self.card_verify(validated_data)
+        
+        return Response(result)  # returns result in Json format using Response(dict)
 
     def card_verify(self, validated_data):
+        '''Отправка токена для валидации карты.'''
         data = dict(
             id=int(validated_data['params']['post_id']),
             method=CARD_VERIFY,
@@ -168,7 +178,7 @@ class CardVerify(APIView):
 
 
     def receipts_create(self, validated_data):
-
+        '''Создание чека на оплату.'''
         data = dict(
             id=int(validated_data['params']['post_id']),
             method=RECEIPTS_CREATE,
@@ -192,13 +202,14 @@ class CardVerify(APIView):
         
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()  
-        receipt = result 
+         
         
         token=validated_data['params']['token']
         if 'error' in result:
-            data = result
+            receipt = result
+            
             result = self.card_remove(token, validated_data)
-            result.update(token=token, fail='rec create', data=data)
+            result.update(fail='receipt create', receipt=receipt)
             return result
         
         receipt_id = result['result']['receipt']['_id']
@@ -206,12 +217,16 @@ class CardVerify(APIView):
         
         
         result = self.receipts_pay(receipt_id, token, validated_data)
-        result.update(receipt=receipt, status='rec create')
+        result.update(status='receipt paid')
         return result   
     
     
     
     def receipts_pay(self, receipt_id, token, validated_data):
+        '''
+        Производится оплата чека.
+        '''
+        
         data = dict(
             id=int(validated_data['params']['post_id']),
             method=RECEIPTS_PAY,
@@ -226,9 +241,9 @@ class CardVerify(APIView):
 
 
         if 'error' in result:
-            data = result
+            receipts_pay_response = result
             result = self.card_remove(token, validated_data)
-            result.update(fail='pay', data=data, token=token, receipt_id=receipt_id, auth=AUTHORIZATION)
+            result.update(fail='pay', data=data, token=token, receipts_pay_response=result)
             return result
 
         result.update(status='pay success')
@@ -236,6 +251,10 @@ class CardVerify(APIView):
 
 
     def card_remove(self, token, validated_data):
+        '''
+        Удаление токена карты.
+        '''
+        
         data = dict(
             id=int(validated_data['params']['post_id']),
             method=CARD_REMOVE,

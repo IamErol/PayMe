@@ -196,7 +196,7 @@ class CardVerify(APIView):
         
         
         result = self.receipts_pay(receipt_id, token)
-        result.update(receipt=receipt)
+        result.update(receipt=receipt, status='rec create')
         return result   
     
     
@@ -220,7 +220,7 @@ class CardVerify(APIView):
             result.update(fail='pay', data=data, token=token, receipt_id=receipt_id, auth=AUTHORIZATION)
             return result
 
-        result.update(status:'pay success')
+        result.update(status='pay success')
         return result
 
 

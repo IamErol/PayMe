@@ -159,7 +159,7 @@ class CardVerify(APIView):
             return result
         
         receipt_id = result['result']['receipt']['_id']
-        token = result['result']['token']
+        token=validated_data['params']['token']
         
         result = self.receipts_pay(receipt_id, token)
         return result   

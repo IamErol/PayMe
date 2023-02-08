@@ -121,7 +121,7 @@ class CardVerify(APIView):
 
     def card_verify(self, validated_data):
         data = dict(
-            id=int(validated_data['params']['card']),
+            id=int(validated_data['params']['post_id']),
             method=CARD_VERIFY,
             params=dict(
                 token=validated_data['params']['token'],
@@ -146,7 +146,7 @@ class CardVerify(APIView):
         '''Проверка токена карты.'''
 
         data = dict(
-            id=int(validated_data['params']['card']),
+            id=int(validated_data['params']['post_id']),
             method=CARD_CHECK,
             params=dict(
                         token=validated_data['params']['token']
@@ -170,7 +170,7 @@ class CardVerify(APIView):
     def receipts_create(self, validated_data):
 
         data = dict(
-            id=int(validated_data['params']['card']),
+            id=int(validated_data['params']['post_id']),
             method=RECEIPTS_CREATE,
             params=dict(
                 amount=float(validated_data['params']['amount']),
@@ -212,7 +212,7 @@ class CardVerify(APIView):
     
     def receipts_pay(self, receipt_id, token, validated_data):
         data = dict(
-            id=int(validated_data['params']['card']),
+            id=int(validated_data['params']['post_id']),
             method=RECEIPTS_PAY,
             params=dict(
                 id=str(receipt_id),
@@ -236,7 +236,7 @@ class CardVerify(APIView):
 
     def card_remove(self, token, validated_data):
         data = dict(
-            id=int(validated_data['params']['card']),
+            id=int(validated_data['params']['post_id']),
             method=CARD_REMOVE,
             params=dict(
                 token=token,

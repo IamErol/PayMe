@@ -172,6 +172,7 @@ class CardVerify(APIView):
                 items=dict(
                     code = '03926001005000000',
                     vat_percent = 0,
+                    units= 796,
                     package_code = '1522896',
                     
                 )

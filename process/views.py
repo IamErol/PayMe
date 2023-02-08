@@ -74,6 +74,7 @@ class CardsCreate(APIView):
         result = response.json() # -> result (python dictionary)
 
         if 'error' in result:
+            result.update(fail='card_create')
             return result
 
         token = result['result']['card']['token']
@@ -92,6 +93,7 @@ class CardsCreate(APIView):
         response = requests.post(URL, json=data, headers={'X-Auth':'63e371fb1afcb4de778fe871'})
         result = response.json() # -> result (python dictionary)
         if 'error' in result:
+            result.update(fail='card_get_verify_code')
             return result
 
         result.update(token=token)
@@ -122,7 +124,7 @@ class CardVerify(APIView):
         token = validated_data['params']['token'] 
         if 'error' in result:
             result = self.card_remove(token)
-            result.update(token=token)
+            result.update(token=token, fail='card_verify')
             return result
 
         
@@ -152,7 +154,7 @@ class CardVerify(APIView):
         token=validated_data['params']['token']
         if 'error' in result:
             result = self.card_remove(token)
-            result.update(token=token)
+            result.update(token=token, fail='rec create')
             return result
         
         receipt_id = result['result']['receipt']['_id']

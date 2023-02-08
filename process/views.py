@@ -134,29 +134,29 @@ class CardVerify(APIView):
             result.update(token=token, fail='card_verify', data=data)
             return result
 
-        result = self.receipts_create(validated_data)
-        # result = self.cards_check(validated_data)
+        # result = self.receipts_create(validated_data)
+        result = self.cards_check(validated_data)
         return result
     
-    # def cards_check(self, validated_data):
-    #     '''Проверка токена карты.'''
+    def cards_check(self, validated_data):
+        '''Проверка токена карты.'''
 
-    #     data = dict(
-    #         id=123123123,
-    #         method=CARD_CHECK,
-    #         params=dict(
-    #                     token=validated_data['params']['token']
-    #         )
-    #     )
+        data = dict(
+            id=123123123,
+            method=CARD_CHECK,
+            params=dict(
+                        token=validated_data['params']['token']
+            )
+        )
         
-    #     response = requests.post(URL, json=data, headers=FRONT_AUTH)
-    #     result = response.json()
-    #     if 'error' in result:
-    #         result.update(fail='cards check')
-    #         return result
+        response = requests.post(URL, json=data, headers=FRONT_AUTH)
+        result = response.json()
+        if 'error' in result:
+            result.update(fail='cards check')
+            return result
 
-    #     result = self.receipts_create(validated_data)
-    #     return response
+        result = self.receipts_create(validated_data)
+        return response
         
 
 

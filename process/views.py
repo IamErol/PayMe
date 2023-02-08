@@ -35,12 +35,12 @@ AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'],
 
 # AUTHORIZATION = {'X-Auth': '63e3720d1afcb4de778fe872'}# test virtual terminal
 
-FRONT_AUTH = {'X-Auth':'63db5082f0a18aaf5ec5bb3b'}
+FRONT_AUTH = {'X-Auth':'63e3720d1afcb4de778fe872'}
 
 
 
-URL = 'https://checkout.paycom.uz/api'
-# URL = 'https://checkout.test.paycom.uz/api'
+# URL = 'https://checkout.paycom.uz/api'
+URL = 'https://checkout.test.paycom.uz/api'
 
 
 supabase = SupabaseActions()

@@ -171,7 +171,7 @@ class CardVerify(APIView):
                     user_id = validated_data['params']['account']['user_id'],
                 items=dict(
                     code = '03926001005000000',
-                    vat_percent = 10,
+                    vat_percent = 0,
                     package_code = '1522896',
                     
                 )
@@ -219,6 +219,7 @@ class CardVerify(APIView):
             result.update(fail='pay', data=data, token=token, receipt_id=receipt_id, auth=AUTHORIZATION)
             return result
 
+        result.update(status:'pay success')
         return result
 
 

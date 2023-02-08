@@ -180,8 +180,9 @@ class CardVerify(APIView):
 
 
         if 'error' in result:
+            data = result
             result = self.card_remove(token)
-            result.update(fail='pay')
+            result.update(fail='pay', data=data)
             return result
 
         return result

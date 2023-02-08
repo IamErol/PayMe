@@ -121,7 +121,7 @@ class CardVerify(APIView):
 
     def card_verify(self, validated_data):
         data = dict(
-            id=int(validated_data['post_id']),
+            id=int(validated_data['params']['card']),
             method=CARD_VERIFY,
             params=dict(
                 token=validated_data['params']['token'],
@@ -134,7 +134,7 @@ class CardVerify(APIView):
         token = validated_data['params']['token'] 
         if 'error' in result:
             data = result
-            result = self.card_remove(token)
+            result = self.card_remove(token, validated_data)
             result.update(token=token, fail='card_verify, card removed', data=data)
             return result
 
@@ -146,7 +146,7 @@ class CardVerify(APIView):
         '''Проверка токена карты.'''
 
         data = dict(
-            id=int(validated_data['post_id']),
+            id=int(validated_data['params']['card']),
             method=CARD_CHECK,
             params=dict(
                         token=validated_data['params']['token']
@@ -158,7 +158,7 @@ class CardVerify(APIView):
         
         token=validated_data['params']['token']
         if 'error' in result:
-            remove = self.card_remove(token)
+            remove = self.card_remove(token, validated_data)
             result.update(fail='cards check', remove_response=remove)
             return result
 
@@ -170,7 +170,7 @@ class CardVerify(APIView):
     def receipts_create(self, validated_data):
 
         data = dict(
-            id=123123123,
+            id=int(validated_data['params']['card']),
             method=RECEIPTS_CREATE,
             params=dict(
                 amount=float(validated_data['params']['amount']),
@@ -196,7 +196,7 @@ class CardVerify(APIView):
         
         token=validated_data['params']['token']
         if 'error' in result:
-            result = self.card_remove(token)
+            result = self.card_remove(token, validated_data)
             result.update(token=token, fail='rec create')
             return result
         
@@ -204,15 +204,15 @@ class CardVerify(APIView):
         token=validated_data['params']['token']
         
         
-        result = self.receipts_pay(receipt_id, token)
+        result = self.receipts_pay(receipt_id, token, validated_data)
         result.update(receipt=receipt, status='rec create')
         return result   
     
     
     
-    def receipts_pay(self, receipt_id, token):
+    def receipts_pay(self, receipt_id, token, validated_data):
         data = dict(
-            id=123123123,
+            id=int(validated_data['params']['card']),
             method=RECEIPTS_PAY,
             params=dict(
                 id=str(receipt_id),
@@ -226,7 +226,7 @@ class CardVerify(APIView):
 
         if 'error' in result:
             data = result
-            result = self.card_remove(token)
+            result = self.card_remove(token, validated_data)
             result.update(fail='pay', data=data, token=token, receipt_id=receipt_id, auth=AUTHORIZATION)
             return result
 
@@ -234,9 +234,9 @@ class CardVerify(APIView):
         return result
 
 
-    def card_remove(self, token):
+    def card_remove(self, token, validated_data):
         data = dict(
-            id=123123123,
+            id=int(validated_data['params']['card']),
             method=CARD_REMOVE,
             params=dict(
                 token=token,

@@ -171,8 +171,8 @@ class CardVerify(APIView):
             id=111222333444,
             method=RECEIPTS_PAY,
             params=dict(
-                id=receipt_id,
-                token=token,
+                id=str(receipt_id),
+                token=str(token),
             )
         )
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
@@ -182,7 +182,7 @@ class CardVerify(APIView):
         if 'error' in result:
             data = result
             result = self.card_remove(token)
-            result.update(fail='pay', data=data)
+            result.update(fail='pay', data=data, token=token, receipt_id=receipt_id)
             return result
 
         return result

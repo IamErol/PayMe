@@ -49,47 +49,46 @@ class CardsCreate(APIView):
         post_id = secrets.randbits(32)
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        validated_data.update(post_id=str(post_id))
         
-        result = self.card_create(validated_data=serializer.validated_data, post_id=post_id)
+        result = self.card_create(validated_data=validated_data)
         if 'error' in result:
             return Response({
-                             "income_data":serializer.validated_data,
+                             "income_data":validated_data,
                              "result":result,
                              "fail": "start"})
-            
-            
-        # token = result['result']['card']['token']
         
         return Response(result)
     
     
-    def card_create(self, validated_data, post_id):
+    def card_create(self, validated_data):
         '''Создание токена пластиковой карыт.'''
        
         data = {
-                "id": 123123123,
-                # "id": int(post_id),
+                "id": int(validated_data['post_id']),
                 "method": CARD_CREATE,
                 "params": {
                             "card": { "number": str(validated_data['params']['card']['number']), 
-                                     "expire": str(validated_data['params']['card']['expire'])},
+                                      "expire": str(validated_data['params']['card']['expire'])},
     }
         }
         response = requests.post(URL, json=data, headers=FRONT_AUTH)
         result = response.json() # -> result (python dictionary)
 
         if 'error' in result:
-            result.update(fail='card_create')
+            result.update(fail='at card_create')
             return result
 
         token = result['result']['card']['token']
         if token:
-            result = self.card_get_verify_code(token)
+            result = self.card_get_verify_code(token, validated_data)
             return result
     
-    def card_get_verify_code(self, token):
+    def card_get_verify_code(self, token, validated_data):
+        
         data = dict(
-            id=123123123,
+            id=int(validated_data['post_id']),
             method=CARD_GET_VERIFY_CODE,
             params=dict(
                 token=token
@@ -97,6 +96,7 @@ class CardsCreate(APIView):
         )
         response = requests.post(URL, json=data, headers=FRONT_AUTH)
         result = response.json() # -> result (python dictionary)
+        
         if 'error' in result:
             result.update(fail='card_get_verify_code')
             return result
@@ -112,12 +112,12 @@ class CardVerify(APIView):
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         result = self.card_verify(serializer.validated_data)
-        # result.update(final='success')
+        validated_data = serializer.validated_data
         return Response(result)
 
     def card_verify(self, validated_data):
         data = dict(
-            id=123123123,
+            id=int(validated_data['post_id']),
             method=CARD_VERIFY,
             params=dict(
                 token=validated_data['params']['token'],
@@ -131,7 +131,7 @@ class CardVerify(APIView):
         if 'error' in result:
             data = result
             result = self.card_remove(token)
-            result.update(token=token, fail='card_verify', data=data)
+            result.update(token=token, fail='card_verify, card removed', data=data)
             return result
 
         # result = self.receipts_create(validated_data)
@@ -142,7 +142,7 @@ class CardVerify(APIView):
         '''Проверка токена карты.'''
 
         data = dict(
-            id=123123123,
+            id=int(validated_data['post_id']),
             method=CARD_CHECK,
             params=dict(
                         token=validated_data['params']['token']
@@ -151,12 +151,15 @@ class CardVerify(APIView):
         
         response = requests.post(URL, json=data, headers=FRONT_AUTH)
         result = response.json()
+        
+        token=validated_data['params']['token']
         if 'error' in result:
-            result.update(fail='cards check')
+            remove = self.card_remove(token)
+            result.update(fail='cards check', remove_response=remove)
             return result
 
         result = self.receipts_create(validated_data)
-        return response
+        return result
         
 
 

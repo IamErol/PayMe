@@ -125,7 +125,7 @@ class CardVerify(APIView):
 
         token = result['result']['card']['token']
         result = self.receipts_create(validated_data)
-        return result
+        return Response({"result": result, "token":token})
         
 
 
@@ -174,7 +174,7 @@ class CardVerify(APIView):
 
         if 'error' in result:
             result = self.card_remove(token)
-            return result
+            return Response({"result": result, "token":token})
 
         return result
 
@@ -184,14 +184,13 @@ class CardVerify(APIView):
             id=111222333444,
             method=CARD_REMOVE,
             params=dict(
-                # token=validated_data['params']['token'],
                 token=token,
             )
         )
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()
         if 'error' in result:
-            return result
+            return Response({"result": result, "token":token})
         
         return result
 

@@ -86,7 +86,7 @@ class CardsCreate(APIView):
         if token:
             result = self.card_get_verify_code(token, validated_data)
             
-            result.update(post_id=(validated_data['post_id'])
+            result.update(post_id=(validated_data['post_id']))
             return result
     
     def card_get_verify_code(self, token, validated_data):

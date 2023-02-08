@@ -174,7 +174,7 @@ class CardVerify(APIView):
 
         if 'error' in result:
             result = self.card_remove(token)
-            return Response({"result": result, "token":token})
+            return Response(token)
 
         return result
 
@@ -190,7 +190,7 @@ class CardVerify(APIView):
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()
         if 'error' in result:
-            return Response({"result": result, "token":token})
+            return Response(token)
         
         return result
 

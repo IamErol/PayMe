@@ -63,20 +63,11 @@ class CardsCreate(APIView):
     
     
     def card_create(self, validated_data):
-        '''Создание токена пластиковой карты.'''
-       
-    #     data = {
-    #             "id": int(validated_data['post_id']),
-    #             "method": CARD_CREATE,
-    #             "params": {
-    #                         "card": { "number": str(validated_data['params']['card']['number']), 
-    #                                   "expire": str(validated_data['params']['card']['expire'])},
-    #                       }
-    #             }
-    #     response = requests.post(URL, json=data, headers=FRONT_AUTH)
-    #     result = response.json() # -> result (python dictionary)
-    
-        result = post_calls.post_card_create(validated_data, URL, AUTHORIZATION)
+        '''
+        Создание токена пластиковой карты.
+        '''
+  
+        result = post_calls.post_card_create(validated_data, URL, FRONT_AUTH)
 
         if 'error' in result:
             result.update(fail='at card_create')
@@ -86,21 +77,16 @@ class CardsCreate(APIView):
         
         result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
         
+        supabase.db_login()
+        data = supabase.table("customers").insert({"full_name":"Joe"}).execute()
+        
         # result.update(post_id=(validated_data['post_id']))
         return result  # returns messge sent status.
     
     def card_get_verify_code(self, token, validated_data):
-        '''Получение смс кода для верификации карты.'''
-        
-        # data = dict(
-        #     id=int(validated_data['post_id']),
-        #     method=CARD_GET_VERIFY_CODE,
-        #     params=dict(
-        #         token=token
-        #     )
-        # )
-        # response = requests.post(URL, json=data, headers=FRONT_AUTH)
-        # result = response.json() # -> result (python dictionary)
+        '''
+        Получение смс кода для верификации карты.
+        '''
         
         result = post_calls.post_card_get_verify_code(validated_data, token, URL, FRONT_AUTH)
         
@@ -119,7 +105,7 @@ class CardVerify(APIView):
         '''
         Takes post request from client and sends post request to PayMe.
         '''
-            
+           
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
@@ -130,22 +116,14 @@ class CardVerify(APIView):
 
     def card_verify(self, validated_data):
         '''Отправка токена для валидации карты.'''
-        data = dict(
-            id=int(validated_data['params']['post_id']),
-            method=CARD_VERIFY,
-            params=dict(
-                token=validated_data['params']['token'],
-                code=validated_data['params']['code'],
-            )
-        )
-        response = requests.post(URL, json=data, headers=FRONT_AUTH)
-        result = response.json()
+
+        result = post_calls.post_card_verify(validated_data, URL, FRONT_AUTH)
         
-        token = validated_data['params']['token'] 
         if 'error' in result:
+            token = validated_data['params']['token'] 
             data = result
             result = self.card_remove(token, validated_data)
-            result.update(token=token, fail='card_verify, card removed', data=data)
+            result.update(fail='card_verify, card removed', data=data)
             return result
 
         # result = self.receipts_create(validated_data)
@@ -245,6 +223,10 @@ class CardVerify(APIView):
             result = self.card_remove(token, validated_data)
             result.update(fail='pay', data=data, token=token, receipts_pay_response=result)
             return result
+        
+        if result['result']['receipt']['state'] == '4':
+            # db actions here
+            pass
 
         result.update(status='pay success')
         return result

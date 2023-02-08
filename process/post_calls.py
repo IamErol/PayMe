@@ -31,3 +31,17 @@ def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
     response = requests.post(URL, json=data, headers=header)
     result = response.json() # -> result (python dictionary)
     return result
+
+def post_card_verify(validated_data: dict, URL:str, header: dict) -> dict:
+    
+        data = dict(
+            id=int(validated_data['params']['post_id']),
+            method=CARD_VERIFY,
+            params=dict(
+                token=validated_data['params']['token'],
+                code=validated_data['params']['code'],
+            )
+        )
+        response = requests.post(URL, json=data, headers=header)
+        result = response.json()
+        return result

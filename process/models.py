@@ -3,14 +3,12 @@ import os
 from supabase.client import Client, create_client
 from dotenv import load_dotenv
 from random import randint
+from supabase.client import create_client, Client
 load_dotenv()
 
 
-# orders_fields = ('order_amount', 'fulfillment_status', 'owner')
-# transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
-# user = ...
-orders_fields = ('order_amount', 'fulfillment_status', 'owner')
-transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
+orders_fields = ('order_amount', 'status', 'user', 'positions')
+transactions_fileds = ('status', 'order_id', 'user_id', 'cards_token', 'amount', 'receipts_id')
 customers_fields = ('full_name', 'email', 'phone', 'address')
 class SupabaseActions:
 
@@ -31,11 +29,11 @@ class SupabaseActions:
         return supabase
     
         
-    def process_input_data(self, validated_data: dict, fields: tuple) -> dict:
+    def process_input_data(self, payme_response: dict, fields: tuple) -> dict:
         '''Takes dictionary from post request and extracts fields that exists in 
            certain database table'''
-        key = [a for a in validated_data if a in fields]
-        value = [validated_data[a] for a in validated_data if a in fields]
+        key = [a for a in payme_response if a in fields]
+        value = [payme_response[a] for a in payme_response if a in fields]
         
         data = dict(zip(key, value))
         return data
@@ -54,9 +52,12 @@ class SupabaseActions:
         SupabaseActions.dict_check(validated_data)    
         supabase: Client = create_client(self.url, self.key)
         try:
-            supabase.table("transaction").insert(validated_data).execute()
+            supabase.table(table_name).insert(validated_data).execute()
         except:
             raise KeyError
         
         return None
 
+        # data = supabase.process_input_data(serializer.validated_data["info"], customers_fields)
+        # supabase.db_login()
+        # supabase.db_save(validated_data=data, table_name='customer')

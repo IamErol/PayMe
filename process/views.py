@@ -70,7 +70,7 @@ class CardsCreate(APIView):
                                      "expire": str(validated_data['params']['card']['expire'])},
     }
         }
-        response = requests.post(URL, json=data, headers={'X-Auth':'63e371fb1afcb4de778fe871'})
+        response = requests.post(URL, json=data, headers={'X-Auth':'63e3720d1afcb4de778fe872'})
         result = response.json() # -> result (python dictionary)
 
         if 'error' in result:
@@ -90,7 +90,7 @@ class CardsCreate(APIView):
                 token=token
             )
         )
-        response = requests.post(URL, json=data, headers={'X-Auth':'63e371fb1afcb4de778fe871'})
+        response = requests.post(URL, json=data, headers={'X-Auth':'63e3720d1afcb4de778fe872'})
         result = response.json() # -> result (python dictionary)
         if 'error' in result:
             result.update(fail='card_get_verify_code')
@@ -118,7 +118,7 @@ class CardVerify(APIView):
                 code=validated_data['params']['code'],
             )
         )
-        response = requests.post(URL, json=data, headers={'X-Auth':'63e371fb1afcb4de778fe871'})
+        response = requests.post(URL, json=data, headers={'X-Auth':'63e3720d1afcb4de778fe872'})
         result = response.json()
         
         token = validated_data['params']['token'] 

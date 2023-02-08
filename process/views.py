@@ -39,8 +39,8 @@ FRONT_AUTH = {'X-Auth':'63db5082f0a18aaf5ec5bb3b'}
 
 
 
-# URL = 'https://checkout.paycom.uz/api'
-URL = 'https://checkout.test.paycom.uz/api'
+URL = 'https://checkout.paycom.uz/api'
+# URL = 'https://checkout.test.paycom.uz/api'
 
 
 supabase = SupabaseActions()

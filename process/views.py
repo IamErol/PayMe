@@ -39,7 +39,7 @@ FRONT_AUTH = {'X-Auth':'63e3720d1afcb4de778fe872'}
 URL = 'https://checkout.test.paycom.uz/api'
 
 
-supabase = SupabaseActions()
+# supabase = SupabaseActions()
 
 class CardsCreate(APIView):
     
@@ -77,11 +77,11 @@ class CardsCreate(APIView):
         
         result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
         
-        supabase.db_login()
-        data = supabase.table("customer").insert({"full_name":"Joe",
-                                                  "email":'hello@mail.com',
-                                                  "phone": 123123,
-                                                  "address": "add"}).execute()
+        # supabase.db_login()
+        # data = supabase.table("customer").insert({"full_name":"Joe",
+        #                                           "email":'hello@mail.com',
+        #                                           "phone": 123123,
+        #                                           "address": "add"}).execute()
         
         # result.update(post_id=(validated_data['post_id']))
         return result  # returns messge sent status.

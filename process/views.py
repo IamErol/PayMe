@@ -169,6 +169,13 @@ class CardVerify(APIView):
                     phone = str(validated_data['params']['account']['phone']),
                     email = str(validated_data['params']['account']['email']),
                     user_id = validated_data['params']['account']['user_id'],
+                items=dict(
+                    code = '03926001005000000',
+                    vat_percent = 10,
+                    package_code = '1522896',
+                    
+                )
+                
                 )
             )
         )

@@ -123,8 +123,9 @@ class CardVerify(APIView):
         
         token = validated_data['params']['token'] 
         if 'error' in result:
+            data = result
             result = self.card_remove(token)
-            result.update(token=token, fail='card_verify')
+            result.update(token=token, fail='card_verify', data=data)
             return result
 
         

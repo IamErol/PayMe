@@ -30,12 +30,14 @@ customers_fields = ('full_name', 'email', 'phone', 'address')
 # Test page link https://developer.help.paycom.uz/protokol-subscribe-api
 
 
-# AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], 
-#                                           PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
+AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], 
+                                          PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 
-AUTHORIZATION = {'X-Auth': '63e3720d1afcb4de778fe872:oUn6wfLBI12L43AY0jrJQ8GSdDrV0mLnMGwd'}# test virtual terminal
+# AUTHORIZATION = {'X-Auth': '63e3720d1afcb4de778fe872'}# test virtual terminal
 
-FRONT_AUTH = {'X-Auth':'63e3720d1afcb4de778fe872'}
+FRONT_AUTH = {'X-Auth':'63db5082f0a18aaf5ec5bb3b'}
+
+
 
 # URL = 'https://checkout.paycom.uz/api'
 URL = 'https://checkout.test.paycom.uz/api'

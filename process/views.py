@@ -215,6 +215,7 @@ class CardVerify(APIView):
                 token=str(token),
             )
         )
+        
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()
 
@@ -239,15 +240,19 @@ class CardVerify(APIView):
         )
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()
+        
+        
         if 'error' in result:
             result.update(token=token, fail='remove')
             return result
+        
         result.update(cardremoved='cardremoved')
         return result
+    
+    
+    
 
-    #     token = result['result']['card']['token']
-    #     result = self.receipts_create(validated_data)
-    #     return result
+ 
 
 
 

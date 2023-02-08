@@ -12,7 +12,7 @@ from .models import *
 from .pay_me_methds import *
 from . import post_calls
 import secrets
-
+from django.http import HttpResponse
 import logging
 
 logger = logging.getLogger(__name__)

@@ -112,7 +112,7 @@ class CardVerify(APIView):
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         result = self.card_verify(serializer.validated_data)
-        result.update(final='success')
+        # result.update(final='success')
         return Response(result)
 
     def card_verify(self, validated_data):

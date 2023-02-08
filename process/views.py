@@ -54,7 +54,8 @@ class CardsCreate(APIView):
         if 'error' in result:
             return Response({
                              "income_data":serializer.validated_data,
-                             "result":result})
+                             "result":result,
+                             "fail": "start"})
             
             
         # token = result['result']['card']['token']
@@ -111,7 +112,7 @@ class CardVerify(APIView):
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         result = self.card_verify(serializer.validated_data)
-        return Response(result)
+        return result
 
     def card_verify(self, validated_data):
         data = dict(

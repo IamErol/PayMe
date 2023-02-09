@@ -24,8 +24,8 @@ def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
             "id": int(validated_data['post_id']),
             "method": CARD_CREATE,
             "params": {
-                        "card": { "number": str(validated_data['params']['card']['number']), 
-                                    "expire": str(validated_data['params']['card']['expire'])},
+                        "card": { "number": validated_data['params']['card']['number'], 
+                                  "expire": validated_data['params']['card']['expire']},
                         }
             }
     response = requests.post(URL, json=data, headers=header)

@@ -14,42 +14,56 @@ from . import post_calls
 import secrets
 from django.http import HttpResponse
 import logging
+import uuid
 
 # logger = logging.getLogger(__name__)
 
-orders_fields = ('order_amount', 'fulfillment_status', 'owner')
-transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
-customers_fields = ('full_name', 'email', 'phone', 'address')
+# orders_fields = ('order_amount', 'fulfillment_status', 'owner')
+# transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
+# customers_fields = ('full_name', 'email', 'phone', 'address')
 
 # TEST ENDPOINT URL https://checkout.test.paycom.uz/api
 # AUTHORIZATION X-Auth: {id}:{password}  
 # Test page link https://developer.help.paycom.uz/protokol-subscribe-api
 
 
-AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], 
-                                          PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
+# AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], 
+#                                           PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 
 
-FRONT_AUTH = {'X-Auth':'63e4bca666d78f1f2b02c088'}
-
-
+# TEST_FRONT_AUTH = {'X-Auth':'63e4bca666d78f1f2b02c088'}
 
 # URL = 'https://checkout.paycom.uz/api'
-URL = 'https://checkout.test.paycom.uz/api'
+
+stage = os.getenv('STAGE')
+
+if stage == 'test':
+    URL = PAYME_SETTINGS['TEST_URL']
+    FRONT_AUTH = {'X-Auth': '{}'.format(PAYME_SETTINGS['PAY_ME_TEST_ID'])}
+    AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_TEST_ID'], 
+                                          PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
+else:
+    if stage == 'prod':
+        URL = PAYME_SETTINGS['PROD_URL']
+        FRONT_AUTH = {'X-Auth': '{}'.format(PAYME_SETTINGS['PAY_ME_PROD_ID'])}
+        AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_PROD_ID'], 
+                                            PAYME_SETTINGS['PAY_ME_PROD_KEY'])}
+    
 
 
-# supabase = SupabaseActions()
+sup = SupabaseActions()
 
 class CardsCreate(APIView):
     
     def post(self, request):
-        post_id = secrets.randbits(32) # generating id number for post requests to PayMe.
-        
+        post_id = str(secrets.randbits(32)) # generating id number for post requests to PayMe.
+        order_id = str(uuid.uuid4())
+
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         
         validated_data = serializer.validated_data
-        validated_data.update(post_id=str(post_id)) # including id number for future post requests to PayMe.
+        validated_data.update(post_id=post_id, order_id= order_id) # including id number for future post requests to PayMe.
         
         result = self.card_create(validated_data=validated_data) # calling card creation.
         if 'error' in result:
@@ -57,7 +71,10 @@ class CardsCreate(APIView):
                              "income_data":validated_data,
                              "result":result,
                              "fail": "start"})
+            
         
+        ORDERS = sup.orders_data_to_insert(result, validated_data)  
+        # sup.insert_data(ORDERS, 'orders')      
         return Response(result)
     
     

@@ -7,7 +7,6 @@ import os
 from supabase.client import Client, create_client
 from dotenv import load_dotenv
 from random import randint
-load_dotenv()
 from .models import *
 from .pay_me_methds import *
 from . import post_calls
@@ -15,27 +14,13 @@ import secrets
 from django.http import HttpResponse
 import logging
 import uuid
-
-# logger = logging.getLogger(__name__)
-
-# orders_fields = ('order_amount', 'fulfillment_status', 'owner')
-# transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
-# customers_fields = ('full_name', 'email', 'phone', 'address')
-
-# TEST ENDPOINT URL https://checkout.test.paycom.uz/api
-# AUTHORIZATION X-Auth: {id}:{password}  
-# Test page link https://developer.help.paycom.uz/protokol-subscribe-api
-
-
-# AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'], 
-#                                           PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
-
-
+load_dotenv()
 # TEST_FRONT_AUTH = {'X-Auth':'63e4bca666d78f1f2b02c088'}
 
-# URL = 'https://checkout.paycom.uz/api'
 
 stage = os.getenv('STAGE')
+sup = SupabaseActions()
+sup.supabase_login()
 
 
 if stage == 'test':
@@ -52,7 +37,7 @@ else:
     
 
 
-sup = SupabaseActions()
+
 
 class CardsCreate(APIView):
     

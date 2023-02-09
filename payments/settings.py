@@ -148,13 +148,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # }
 
 PAYME_SETTINGS = {
-    'DEBUG':True,   #True - test mode, False - production mode
-    'PAY_ME_ID':os.getenv('PAY_ME_ID'),  
-    'PAY_ME_TEST_KEY':os.getenv('PAY_ME_TEST_KEY'),
-    # 'ACCOUNTS':{
-    #     'KEY_1':'order_id',
-    #     'KEY_2':'',
-    # }
+
+    'TEST_URL':os.getenv('TEST_URL'),  
+    'PAY_ME_TEST_ID':os.getenv('PAY_ME_TEST_ID'),  
+    'PAY_ME_TEST_KEY':os.getenv('PAY_ME_TEST_KEY'),  
+    
+    'PROD_URL':os.getenv('PROD_URL'),  
+    'PAY_ME_ID':os.getenv('PAY_ME_PROD_ID'),  
+    'PAY_ME_ID':os.getenv('PAY_ME_PROD_KEY'),  
+
 }
 
 CORS_ALLOWED_ORIGINS = [

@@ -74,7 +74,7 @@ class CardsCreate(APIView):
                              "fail": "start"})
             
         
-        ORDERS = sup.orders_data_to_insert(result, validated_data)  
+        # ORDERS = sup.orders_data_to_insert(result, validated_data)  
         # sup.insert_data(ORDERS, 'orders')      
         return Response(result)
     
@@ -91,10 +91,10 @@ class CardsCreate(APIView):
             return result
 
         token = result['result']['card']['token']
-        result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
-        info = {"status":7}
-        
+        info = {"status":17}
         sup.insert_data(info, 'transactions')
+        result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
+        
 
         return result  # returns messge sent status.
     

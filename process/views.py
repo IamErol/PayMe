@@ -37,6 +37,7 @@ import uuid
 
 stage = os.getenv('STAGE')
 
+
 if stage == 'test':
     URL = PAYME_SETTINGS['TEST_URL']
     FRONT_AUTH = {'X-Auth': '{}'.format(PAYME_SETTINGS['PAY_ME_TEST_ID'])}
@@ -91,12 +92,9 @@ class CardsCreate(APIView):
 
         token = result['result']['card']['token']
         result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
-        info = {"full_name":"Joe",
-                "email":'hello@mail.com',
-                "phone": 123123,
-                "address": "add"}
+        info = {"status":7}
         
-        sup.insert_data(info, 'user-data')
+        sup.insert_data(info, 'transactions')
 
         return result  # returns messge sent status.
     

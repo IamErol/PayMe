@@ -30,7 +30,7 @@ AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_ID'],
                                           PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 
 
-FRONT_AUTH = {'X-Auth':'63e371fb1afcb4de778fe871'}
+FRONT_AUTH = {'X-Auth':'63e4bca666d78f1f2b02c088'}
 
 
 

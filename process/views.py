@@ -90,15 +90,14 @@ class CardsCreate(APIView):
             return result
 
         token = result['result']['card']['token']
-        return result
         result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
+        info = {"full_name":"Joe",
+                "email":'hello@mail.com',
+                "phone": 123123,
+                "address": "add"}
         
-        # supabase.db_login()
-        # data = supabase.table("customer").insert({"full_name":"Joe",
-        #                                           "email":'hello@mail.com',
-        #                                           "phone": 123123,
-        #                                           "address": "add"}).execute()
-        # result.update(post_id=(validated_data['post_id']))
+        sup.insert_data(info, 'user-data')
+
         return result  # returns messge sent status.
     
     def card_get_verify_code(self, token, validated_data):

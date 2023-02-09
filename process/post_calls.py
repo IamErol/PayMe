@@ -30,6 +30,7 @@ def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
             }
     response = requests.post(URL, json=data, headers=header)
     result = response.json() # -> result (python dictionary)
+    result.update(data=data)
     return result
 
 def post_card_verify(validated_data: dict, URL:str, header: dict) -> dict:

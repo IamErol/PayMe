@@ -154,8 +154,8 @@ PAYME_SETTINGS = {
     'PAY_ME_TEST_KEY':os.getenv('PAY_ME_TEST_KEY'),  
     
     'PROD_URL':os.getenv('PROD_URL'),  
-    'PAY_ME_ID':os.getenv('PAY_ME_PROD_ID'),  
-    'PAY_ME_ID':os.getenv('PAY_ME_PROD_KEY'),  
+    'PAY_ME_PROD_ID':os.getenv('PAY_ME_PROD_ID'),  
+    'PAY_ME_PROD_KEY':os.getenv('PAY_ME_PROD_KEY'),  
 
 }
 

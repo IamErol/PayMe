@@ -194,7 +194,7 @@ logging.config.dictConfig({
         },
         # Our application code
         'app': {
-            'level': info,
+            'level': 'info',
             'handlers': ['console'],
             # Avoid double logging because of root logger
             'propagate': False,

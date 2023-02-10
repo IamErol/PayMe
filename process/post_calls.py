@@ -105,7 +105,7 @@ def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
     
     
     
-def post_receipts_pay(validated_data: dict, URL:str, header: dict) -> dict:
+def post_receipts_pay(validated_data: dict, URL:str, header: dict, receipt_id: str, token:str) -> dict:
 
     data = dict(
             id=int(validated_data['params']['post_id']),
@@ -116,12 +116,12 @@ def post_receipts_pay(validated_data: dict, URL:str, header: dict) -> dict:
             )
         )
         
-        response = requests.post(URL, json=data, headers=header)
-        result = response.json()
+    response = requests.post(URL, json=data, headers=header)
+    result = response.json()
     return result
 
 
-def post_card_remove(validated_data: dict, URL:str, header: dict) -> dict:
+def post_card_remove(validated_data: dict, URL:str, header: dict, token:str) -> dict:
 
     data = dict(
             id=int(validated_data['params']['post_id']),
@@ -131,6 +131,6 @@ def post_card_remove(validated_data: dict, URL:str, header: dict) -> dict:
             )
         )
         
-        response = requests.post(URL, json=data, headers=header)
-        result = response.json()
+    response = requests.post(URL, json=data, headers=header)
+    result = response.json()
     return result

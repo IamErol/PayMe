@@ -168,12 +168,12 @@ class CardVerify(APIView):
     def receipts_pay(self, receipt_id, token, validated_data):
         """Initialization of a payment"""
 
-        result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION)
+        result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION, receipt_id, token)
 
         if 'error' in result:
             receipts_pay_response = result
             result = self.card_remove(token, validated_data)
-            result.update(fail='pay', data=data, token=token, receipts_pay_response=result)
+            result.update(fail='pay', token=token, receipts_pay_response=result)
             return result
         
         if result['result']['receipt']['state'] == '4':
@@ -192,7 +192,7 @@ class CardVerify(APIView):
 
     def card_remove(self, token, validated_data):
         """Deleting card token."""
-        result = post_calls.post_card_remove(validated_data, URL, AUTHORIZATION)
+        result = post_calls.post_card_remove(validated_data, URL, AUTHORIZATION, token)
         
         if 'error' in result:
             result.update(token=token, fail='remove')

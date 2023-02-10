@@ -14,6 +14,11 @@ import secrets
 from django.http import HttpResponse
 import logging
 import uuid
+import datetime
+# import the logging library
+import logging
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 load_dotenv()
 # TEST_FRONT_AUTH = {'X-Auth':'63e4bca666d78f1f2b02c088'}
 

@@ -172,6 +172,9 @@ class CardVerify(APIView):
                     email = str(validated_data['params']['account']['email']),
                     user_id = validated_data['params']['account']['user_id'],
                 items=dict(
+                    title = validated_data['params']['items']['title'],
+                    price = validated_data['params']['items']['price'],
+                    count = validated_data['params']['items']['count'],
                     code = validated_data['params']['items']['code'],
                     vat_percent = 0,
                     units= validated_data['params']['items']['units'],

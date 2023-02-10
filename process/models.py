@@ -45,11 +45,12 @@ class SupabaseActions:
         
         try:
             order_data = {
+                              "user_id":validated_data["params"]['account']["user_id"],
                               "order_amount":result["result"]['receipt']['amount'],
                               "status":result["result"]['receipt']['state'], 
-                              "user":validated_data["params"]['account']["user_id"], 
                               "positions":validated_data["params"]['positions'], 
-                              "transaction_id":validated_data["params"]['transaction_id']
+                              "transaction_id":validated_data["params"]['transaction_id'],
+                              "user_data":validated_data["params"]['account']
                               }
         except:
             raise KeyError

@@ -76,8 +76,8 @@ class CardsCreate(APIView):
             return result
 
         token = result['result']['card']['token']
-        info = {"status":17}
-        sup.insert_data(info, 'transactions')
+        # info = {"status":17}
+        # sup.insert_data(info, 'transactions')
         result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
         
 
@@ -167,10 +167,10 @@ class CardVerify(APIView):
                     email = str(validated_data['params']['account']['email']),
                     user_id = validated_data['params']['account']['user_id'],
                 items=dict(
-                    code = '03926001005000000',
+                    code = validated_data['params']['items']['code'],
                     vat_percent = 0,
-                    units= 796,
-                    package_code = '1522896',
+                    units= validated_data['params']['items']['units'],
+                    package_code = validated_data['params']['items']['package_code'],
                     
                 )
                 

@@ -168,19 +168,27 @@ class CardVerify(APIView):
             params=dict(
                 amount=float(validated_data['params']['amount']),
                 account=dict(
-                    phone = str(validated_data['params']['account']['phone']),
-                    email = str(validated_data['params']['account']['email']),
-                    user_id = validated_data['params']['account']['user_id'],
-                items=dict(
-                    title = validated_data['params']['items']['title'],
-                    price = validated_data['params']['items']['price'],
-                    count = validated_data['params']['items']['count'],
-                    code = validated_data['params']['items']['code'],
-                    vat_percent = 0,
-                    units= validated_data['params']['items']['units'],
-                    package_code = validated_data['params']['items']['package_code'],
+                                phone = str(validated_data['params']['account']['phone']),
+                                email = str(validated_data['params']['account']['email']),
+                                user_id = validated_data['params']['account']['user_id'],
                     
-                )
+                detail = dict(
+                                receipt_type= 0,
+                                shipping= dict(
+                                                title=validated_data['params']['detail']['shipping']['title'],
+                                                price=validated_data['params']['detail']['shipping']['price']
+                                    
+                                            ),
+                                items=[dict(
+                                                title = validated_data['params']['items']['title'],
+                                                price = validated_data['params']['items']['price'],
+                                                count = validated_data['params']['items']['count'],
+                                                code = validated_data['params']['items']['code'],
+                                                vat_percent = 0,
+                                                units= validated_data['params']['items']['units'],
+                                                package_code = validated_data['params']['items']['package_code'],
+                    
+                                            )]
                 
                 )
             )

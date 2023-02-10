@@ -164,9 +164,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-LOGGING_CONFIG = None
+# LOGGING_CONFIG = None
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

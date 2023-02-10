@@ -192,7 +192,7 @@ class CardVerify(APIView):
                 
                 )
             )
-        )
+        ))
         
         response = requests.post(URL, json=data, headers=AUTHORIZATION)
         result = response.json()  

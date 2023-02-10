@@ -167,39 +167,55 @@ CORS_ALLOWED_ORIGINS = [
 LOGGING_CONFIG = None
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
-
-logging.config.dictConfig({
+LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'default': {
-            # exact format is not important, this is the minimum information
-            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
         },
-        'django.server': DEFAULT_LOGGING['formatters']['django.server'],
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'special': {
+            '()': 'project.logging.SpecialFilter',
+            'foo': 'bar',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
     },
     'handlers': {
-        # console logs to stderr
         'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
-            'formatter': 'default',
+            'formatter': 'simple'
         },
-        'django.server': DEFAULT_LOGGING['handlers']['django.server'],
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['special']
+        }
     },
     'loggers': {
-        # default for all undefined Python modules
-        '': {
-            'level': 'WARNING',
+        'django': {
             'handlers': ['console'],
+            'propagate': True,
         },
-        # Our application code
-        'app': {
-            'level': 'info',
-            'handlers': ['console'],
-            # Avoid double logging because of root logger
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
             'propagate': False,
         },
-        # Default runserver request logging
-        'django.server': DEFAULT_LOGGING['loggers']['django.server'],
-    },
-})
+        'myproject.custom': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO',
+            'filters': ['special']
+        }
+    }
+}

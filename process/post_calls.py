@@ -5,7 +5,7 @@ import requests
 def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
        
     data = {
-            "id": int(validated_data['post_id']),
+            "id": validated_data['params']['post_id'],
             "method": CARD_CREATE,
             "params": {
                         "card": { "number": validated_data['params']['card']['number'], 
@@ -20,7 +20,7 @@ def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
 def post_card_get_verify_code(validated_data: dict, token: str, URL:str, header: dict) -> dict:
     
         data = dict(
-            id=int(validated_data['post_id']),
+            id=validated_data['params']['post_id'],
             method=CARD_GET_VERIFY_CODE,
             params=dict(
                 token=token
@@ -36,7 +36,7 @@ def post_card_get_verify_code(validated_data: dict, token: str, URL:str, header:
 def post_card_verify(validated_data: dict, URL:str, header: dict) -> dict:
     
         data = dict(
-            id=int(validated_data['params']['post_id']),
+            id=validated_data['params']['post_id'],
             method=CARD_VERIFY,
             params=dict(
                 token=validated_data['params']['token'],
@@ -52,7 +52,7 @@ def post_card_verify(validated_data: dict, URL:str, header: dict) -> dict:
 def post_card_check(validated_data: dict, URL:str, header: dict) -> dict:
     
         data = dict(
-            id=int(validated_data['params']['post_id']),
+            id=validated_data['params']['post_id'],
             method=CARD_CHECK,
             params=dict(
                         token=validated_data['params']['token']
@@ -68,7 +68,7 @@ def post_card_check(validated_data: dict, URL:str, header: dict) -> dict:
 def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
     
         data = dict(
-                    id=int(validated_data['params']['post_id']),
+                    id=validated_data['params']['post_id'],
                     method=RECEIPTS_CREATE,
                     params=dict(
                                     amount=float(validated_data['params']['amount']),
@@ -108,7 +108,7 @@ def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
 def post_receipts_pay(validated_data: dict, URL:str, header: dict, receipt_id: str, token:str) -> dict:
 
     data = dict(
-            id=int(validated_data['params']['post_id']),
+            id=validated_data['params']['post_id'],
             method=RECEIPTS_PAY,
             params=dict(
                 id=str(receipt_id),
@@ -124,7 +124,7 @@ def post_receipts_pay(validated_data: dict, URL:str, header: dict, receipt_id: s
 def post_card_remove(validated_data: dict, URL:str, header: dict, token:str) -> dict:
 
     data = dict(
-            id=int(validated_data['params']['post_id']),
+            id=validated_data['params']['post_id'],
             method=CARD_REMOVE,
             params=dict(
                 token=token,

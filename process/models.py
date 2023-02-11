@@ -49,7 +49,7 @@ class SupabaseActions:
                             "order_amount":result["result"]['receipt']['amount'],
                             "status":result["result"]['receipt']['state'], 
                             "positions":validated_data["params"]['positions'], 
-                            "transaction_id"::result["result"]['transaction_order_id'],
+                            "transaction_id":result["result"]['transaction_order_id'],
                             "user_data":validated_data["params"]['account']
                             }
         return order_data

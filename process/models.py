@@ -27,35 +27,33 @@ class SupabaseActions:
     
     def transactions_data_to_insert(self, result, validated_data) -> dict:
         
-        try:
-            transaction_data = {"status":result["result"]['receipt']['state'], 
-                    "order_id":validated_data["params"]['order_id'], 
-                    "user_id":validated_data["params"]['account']["user_id"], 
-                    "cards_token":validated_data["params"]["token"], 
-                    "amount":result["result"]['receipt']['amount'], 
-                    "receipts_id":result["result"]['receipt']['_id'], 
-                    "request_id":validated_data["params"]['post_id'],
-                    "cash":validated_data["params"]['cash']}
-            return transaction_data
-        except:
-            raise KeyError
+
+        transaction_data = {"status":result["result"]['receipt']['state'], 
+                "order_id":validated_data["params"]['order_id'], 
+                "user_id":validated_data["params"]['account']["user_id"], 
+                "cards_token":validated_data["params"]["token"], 
+                "amount":result["result"]['receipt']['amount'], 
+                "receipts_id":result["result"]['receipt']['_id'], 
+                "request_id":validated_data["params"]['post_id'],
+                "cash":validated_data["params"]['cash']}
+        return transaction_data
+
         
         
     
     def orders_data_to_insert(self, result, validated_data) -> dict:
         
-        try:
-            order_data = {
-                              "user_id":validated_data["params"]['account']["user_id"],
-                              "order_amount":result["result"]['receipt']['amount'],
-                              "status":result["result"]['receipt']['state'], 
-                              "positions":validated_data["params"]['positions'], 
-                              "transaction_id":validated_data["params"]['transaction_id'],
-                              "user_data":validated_data["params"]['account']
-                              }
-            return order_data
-        except:
-            raise KeyError
+        
+        order_data = {
+                            "user_id":validated_data["params"]['account']["user_id"],
+                            "order_amount":result["result"]['receipt']['amount'],
+                            "status":result["result"]['receipt']['state'], 
+                            "positions":validated_data["params"]['positions'], 
+                            "transaction_id":validated_data["params"]['transaction_id'],
+                            "user_data":validated_data["params"]['account']
+                            }
+        return order_data
+
         
         
     

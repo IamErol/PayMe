@@ -66,7 +66,15 @@ class SupabaseActions:
         return None
 
 
-
+    def delete_basket(self, user_id, table_name, supa_client):
+        supabase: Client = supa_client
+        basket = supabase.table(table_name).select("basket").eq("user_id", user_id).execute()
+        for item in basket:
+            supabase.table("countries").delete().eq("id", item).execute()
+            
+    def delete_user_basket(self, user_id, table_name, supa_client):
+        supabase: Client = supa_client
+        supabase.table(table_name).update({"basket": []}).eq("id", user_id).execute()
 
 
 

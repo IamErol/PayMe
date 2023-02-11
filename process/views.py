@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 stage = os.getenv('STAGE')
 sup = SupabaseActions()
-sup.supabase_login()
+client = sup.supabase_login()
 
 
 if stage == 'test':
@@ -184,6 +184,8 @@ class CardVerify(APIView):
         ORDERS = sup.orders_data_to_insert(result, validated_data)
         sup.insert_data(TRANSACTION, 'transactions')
         sup.insert_data(ORDERS, 'orders')
+        sup.delete_basket(table_name='basket', user_id=TRANSACTION['user_id'], supa_client=client)
+        sup.delete_basket(table_name='user-id', user_id=TRANSACTION['user_id'], supa_client=client)
         result.update(data_is_saved='True')
 
             

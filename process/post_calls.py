@@ -1,26 +1,26 @@
 from .pay_me_methds import *
 import requests
+import secrets
 
-
+post_id = int(secrets.randbits(32))
 def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
+    data = dict(
+                id=int(validated_data['params']['post_id']),
+                method=CARD_CREATE,
+                params=dict(
+                            number=validated_data['params']['card']['number'],
+                            expire=validated_data['params']['card']['expire'],
+                            )               
+                )
        
-    data = {
-            "id": validated_data['params']['post_id'],
-            "method": CARD_CREATE,
-            "params": {
-                        "card": { "number": validated_data['params']['card']['number'], 
-                                  "expire": validated_data['params']['card']['expire']},
-                        }
-            }
     response = requests.post(URL, json=data, headers=header)
     result = response.json() # -> result (python dictionary)
-    # result.update(data=data)
     return result
 
 def post_card_get_verify_code(validated_data: dict, token: str, URL:str, header: dict) -> dict:
     
         data = dict(
-            id=validated_data['params']['post_id'],
+            id=int(validated_data['params']['post_id']),
             method=CARD_GET_VERIFY_CODE,
             params=dict(
                 token=token
@@ -36,7 +36,7 @@ def post_card_get_verify_code(validated_data: dict, token: str, URL:str, header:
 def post_card_verify(validated_data: dict, URL:str, header: dict) -> dict:
     
         data = dict(
-            id=validated_data['params']['post_id'],
+            id=int(validated_data['params']['post_id']),
             method=CARD_VERIFY,
             params=dict(
                 token=validated_data['params']['token'],
@@ -52,7 +52,7 @@ def post_card_verify(validated_data: dict, URL:str, header: dict) -> dict:
 def post_card_check(validated_data: dict, URL:str, header: dict) -> dict:
     
         data = dict(
-            id=validated_data['params']['post_id'],
+            id=int(validated_data['params']['post_id']),
             method=CARD_CHECK,
             params=dict(
                         token=validated_data['params']['token']
@@ -84,7 +84,7 @@ def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
                                                     user_id=validated_data['params']['address']['user_id'],
                                     )),
                                     detail = dict(
-                                                    receipt_type= 0,
+                                                    receipt_type= int(validated_data['params']['detail']['receipt_type']),
                                                     shipping= dict(
                                                                     title=validated_data['params']['detail']['shipping']['title'],
                                                                     price=validated_data['params']['detail']['shipping']['price'],

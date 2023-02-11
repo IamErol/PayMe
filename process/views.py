@@ -49,7 +49,7 @@ class CardsCreate(APIView):
     '''
     
     def post(self, request):
-        post_id = str(secrets.randbits(32)) # generating id number for post requests to PayMe.
+        post_id = int(secrets.randbits(32)) # generating id number for post requests to PayMe.
         order_id = str(uuid.uuid4())
 
         serializer = SubscribeSerializer(data=request.data, many=False)

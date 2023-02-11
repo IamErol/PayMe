@@ -56,7 +56,7 @@ class CardsCreate(APIView):
         serializer.is_valid(raise_exception=True)
         
         validated_data = serializer.validated_data
-        validated_data["params"].update(post_id=post_id, order_id= order_id) # including id number for future post requests to PayMe.
+        validated_data.update(post_id=post_id, order_id= order_id) # including id number for future post requests to PayMe.
         
         result = self.card_create(validated_data=validated_data) # calling card creation.
         if 'error' in result:

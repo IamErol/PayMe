@@ -178,12 +178,13 @@ class CardVerify(APIView):
         
         if result['result']['receipt']['state'] == '4':
             try:
-                order = sup.orders_data_to_insert(result, validated_data)
-                transaction = sup.transactions_data_to_insert(result, validated_data)
-                sup.insert_data(order, 'orders')
-                sup.insert_data(transaction, 'transactions')
+                TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+                ORDERS = sup.orders_data_to_insert(result, validated_data)
+                insert_transaction = sup.insert_data(TRANSACTION, 'transactions')
+                insert_transaction = sup.insert_data(ORDERS, 'orders')
+                result.update(data_is_saved='True')
             except:
-                result.update(data_is_not_saved='True')
+                result.update(data_is_saved='False')
             
 
         result.update(status='pay success')

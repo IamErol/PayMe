@@ -77,7 +77,7 @@ def post_card_check(validated_data: dict, URL:str, header: dict) -> dict:
 def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
     
         data = dict(
-                    id=validated_data['params']['post_id'],
+                    id=int(validated_data['params']['post_id']),
                     method=RECEIPTS_CREATE,
                     params=dict(
                                     amount=float(validated_data['params']['amount']),
@@ -123,7 +123,7 @@ def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
 def post_receipts_pay(validated_data: dict, URL:str, header: dict, receipt_id: str, token:str) -> dict:
 
     data = dict(
-            id=validated_data['params']['post_id'],
+            id=int(validated_data['params']['post_id']),
             method=RECEIPTS_PAY,
             params=dict(
                 id=str(receipt_id),
@@ -139,7 +139,7 @@ def post_receipts_pay(validated_data: dict, URL:str, header: dict, receipt_id: s
 def post_card_remove(validated_data: dict, URL:str, header: dict, token:str) -> dict:
 
     data = dict(
-            id=validated_data['params']['post_id'],
+            id=int(validated_data['params']['post_id']),
             method=CARD_REMOVE,
             params=dict(
                 token=token,

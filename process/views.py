@@ -182,8 +182,8 @@ class CardVerify(APIView):
             try:
                 TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
                 ORDERS = sup.orders_data_to_insert(result, validated_data)
-                insert_transaction = sup.insert_data(TRANSACTION, 'transactions')
-                insert_transaction = sup.insert_data(ORDERS, 'orders')
+                sup.insert_data(TRANSACTION, 'transactions')
+                sup.insert_data(ORDERS, 'orders')
                 result.update(data_is_saved='True')
             except:
                 result.update(data_is_saved='False')

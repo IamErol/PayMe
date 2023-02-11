@@ -36,10 +36,11 @@ class SupabaseActions:
                     "receipts_id":result["result"]['receipt']['_id'], 
                     "request_id":validated_data["params"]['post_id'],
                     "cash":validated_data["params"]['cash']}
+            return transaction_data
         except:
             raise KeyError
         
-        return transaction_data
+        
     
     def orders_data_to_insert(self, result, validated_data) -> dict:
         
@@ -52,10 +53,11 @@ class SupabaseActions:
                               "transaction_id":validated_data["params"]['transaction_id'],
                               "user_data":validated_data["params"]['account']
                               }
+            return order_data
         except:
             raise KeyError
         
-        return order_data
+        
     
             
         

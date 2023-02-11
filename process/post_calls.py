@@ -1,8 +1,8 @@
 from .pay_me_methds import *
 import requests
-import secrets
 
-post_id = int(secrets.randbits(32))
+
+
 def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
     data = dict(
                 id=int(validated_data['params']['post_id']),

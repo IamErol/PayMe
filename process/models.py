@@ -32,7 +32,7 @@ class SupabaseActions:
                 "order_id":result["result"]['transaction_order_id'], 
                 "user_id":validated_data["params"]['account']["user_id"], 
                 "cards_token":validated_data["params"]["token"], 
-                "amount":result["result"]['receipt']['amount'], 
+                "amount":str(result["result"]['receipt']['amount'])[:-2], 
                 "receipts_id":result["result"]['receipt']['_id'], 
                 "request_id":validated_data["params"]['post_id'],
                 "cash":validated_data["params"]['cash']}
@@ -46,7 +46,7 @@ class SupabaseActions:
         
         order_data = {
                             "user_id":validated_data["params"]['account']["user_id"],
-                            "order_amount":result["result"]['receipt']['amount'],
+                            "order_amount":str(result["result"]['receipt']['amount'])[:-2],
                             "status":result["result"]['receipt']['state'], 
                             "positions":validated_data["params"]['positions'], 
                             "transaction_id":result["result"]['transaction_order_id'],

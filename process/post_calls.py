@@ -2,17 +2,16 @@ from .pay_me_methds import *
 import requests
 
 
-
 def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
-    data = dict(
-                id=int(validated_data['params']['post_id']),
-                method=CARD_CREATE,
-                params=dict(
-                            number=validated_data['params']['card']['number'],
-                            expire=validated_data['params']['card']['expire'],
-                            )               
-                )
        
+    data = {
+            "id": int(validated_data['post_id']),
+            "method": CARD_CREATE,
+            "params": {
+                        "card": { "number": validated_data['params']['card']['number'], 
+                                  "expire": validated_data['params']['card']['expire']},
+                        }
+            }
     response = requests.post(URL, json=data, headers=header)
     result = response.json() # -> result (python dictionary)
     # result.update(data=data)
@@ -21,7 +20,7 @@ def post_card_create(validated_data: dict, URL:str, header: dict) -> dict:
 def post_card_get_verify_code(validated_data: dict, token: str, URL:str, header: dict) -> dict:
     
         data = dict(
-            id=int(validated_data['params']['post_id']),
+            id=int(validated_data['post_id']),
             method=CARD_GET_VERIFY_CODE,
             params=dict(
                 token=token
@@ -76,16 +75,10 @@ def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
                                     account=dict(
                                                     phone = str(validated_data['params']['account']['phone']),
                                                     email = str(validated_data['params']['account']['email']),
-                                                    user_id = validated_data['params']['account']['user_id'],
-                                    address=dict(
-                                                    code=validated_data['params']['address']['code'],
-                                                    name=validated_data['params']['address']['name'],
-                                                    email=validated_data['params']['address']['email'],
-                                                    phone=validated_data['params']['address']['phone'],
-                                                    user_id=validated_data['params']['address']['user_id'],
-                                    )),
+                                                    user_id = validated_data['params']['account']['user_id'],),
+                    
                                     detail = dict(
-                                                    receipt_type= int(validated_data['params']['detail']['receipt_type']),
+                                                    receipt_type= 0,
                                                     shipping= dict(
                                                                     title=validated_data['params']['detail']['shipping']['title'],
                                                                     price=validated_data['params']['detail']['shipping']['price'],

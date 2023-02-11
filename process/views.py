@@ -176,7 +176,7 @@ class CardVerify(APIView):
             result.update(fail='pay', token=token, receipts_pay_response=result)
             return result
         
-        if result['result']['receipt']['state'] == '4':
+        if result['result']['receipt']['state'] == 4:
             try:
                 TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
                 ORDERS = sup.orders_data_to_insert(result, validated_data)

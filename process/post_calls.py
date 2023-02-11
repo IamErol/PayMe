@@ -75,14 +75,14 @@ def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
                                     account=dict(
                                                     phone = str(validated_data['params']['account']['phone']),
                                                     email = str(validated_data['params']['account']['email']),
-                                                    user_id = validated_data['params']['account']['user_id'],),
+                                                    user_id = validated_data['params']['account']['user_id'],
                                     address=dict(
                                                     code=validated_data['params']['address']['code'],
                                                     name=validated_data['params']['address']['name'],
                                                     email=validated_data['params']['address']['email'],
                                                     phone=validated_data['params']['address']['phone'],
                                                     user_id=validated_data['params']['address']['user_id'],
-                                    ),
+                                    )),
                                     detail = dict(
                                                     receipt_type= 0,
                                                     shipping= dict(

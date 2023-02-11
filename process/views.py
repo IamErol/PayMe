@@ -167,8 +167,9 @@ class CardVerify(APIView):
     
     def receipts_pay(self, receipt_id, token, validated_data):
         """Initialization of a payment"""
-
+        transaction_order_id = str(uuid.uuid4())
         result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION, receipt_id, token)
+        
 
         if 'error' in result:
             receipts_pay_response = result
@@ -177,6 +178,7 @@ class CardVerify(APIView):
             return result
         
         if result['result']['receipt']['state'] == 4:
+            validated_data.update(transaction_order_id=transaction_order_id)
             try:
                 TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
                 ORDERS = sup.orders_data_to_insert(result, validated_data)

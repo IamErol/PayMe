@@ -50,13 +50,13 @@ class CardsCreate(APIView):
     
     def post(self, request):
         post_id = int(secrets.randbits(32)) # generating id number for post requests to PayMe.
-        order_id = str(uuid.uuid4())
+        
 
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         
         validated_data = serializer.validated_data
-        validated_data.update(post_id=post_id, order_id= order_id) # including id number for future post requests to PayMe.
+        validated_data.update(post_id=post_id) # including id number for future post requests to PayMe.
         
         result = self.card_create(validated_data=validated_data) # calling card creation.
         if 'error' in result:
@@ -168,6 +168,7 @@ class CardVerify(APIView):
     def receipts_pay(self, receipt_id, token, validated_data):
         """Initialization of a payment"""
         transaction_order_id = str(uuid.uuid4())
+        
         result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION, receipt_id, token)
         
 
@@ -176,7 +177,7 @@ class CardVerify(APIView):
             result = self.card_remove(token, validated_data)
             result.update(fail='pay', token=token, receipts_pay_response=result)
             return result
-        
+        result.update(transaction_order_id=transaction_order_id)
 
         TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
         ORDERS = sup.orders_data_to_insert(result, validated_data)

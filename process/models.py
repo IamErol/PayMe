@@ -29,7 +29,7 @@ class SupabaseActions:
         
 
         transaction_data = {"status":result["result"]['receipt']['state'], 
-                "order_id":validated_data['order_id'], 
+                "order_id":result["result"]['transaction_order_id'], 
                 "user_id":validated_data["params"]['account']["user_id"], 
                 "cards_token":validated_data["params"]["token"], 
                 "amount":result["result"]['receipt']['amount'], 

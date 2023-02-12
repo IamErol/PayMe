@@ -47,7 +47,7 @@ class SupabaseActions:
         order_data = {
                             "user_id":validated_data["params"]['account']["user_id"],
                             "order_amount":str(result["result"]['receipt']['amount'])[:-2],
-                            "status":result["result"]['receipt']['state'], 
+                            "status":validated_data["params"]['status'], 
                             "positions":validated_data["params"]['positions'], 
                             "transaction_id":result["result"]['transaction_order_id'],
                             "user_data":validated_data["params"]['account']

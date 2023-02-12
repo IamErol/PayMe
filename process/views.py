@@ -123,10 +123,11 @@ class CardVerify(APIView):
                 
             if result["error"]["code"] == "-31101":  #Sms timeout. Remove token.
                 token = validated_data['params']['token'] 
-                data = result["result"]["error"]
+                data = result["error"]
                 result = self.card_remove(token, validated_data)
                 result["result"].update(fail='card removed', error=data)
                 return result
+            return result
 
         # result = self.receipts_create(validated_data)
         result = self.cards_check(validated_data)

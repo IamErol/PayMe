@@ -179,19 +179,19 @@ class CardVerify(APIView):
             return result
         
         result["result"].update(transaction_order_id=transaction_order_id)
-
-        TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
-        ORDERS = sup.orders_data_to_insert(result, validated_data)
-        sup.insert_data(TRANSACTION, 'transactions')
-        sup.insert_data(ORDERS, 'orders')
-        sup.delete_basket(table_name='basket', user_id=TRANSACTION['user_id'], supa_client=client)
-        sup.delete_basket(table_name='user-id', user_id=TRANSACTION['user_id'], supa_client=client)
-        result.update(data_is_saved='True')
-
-            
-
-        result.update(status='pay success')
-        return result
+        try:
+            TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            ORDERS = sup.orders_data_to_insert(result, validated_data)
+            sup.insert_data(TRANSACTION, 'transactions')
+            sup.insert_data(ORDERS, 'orders')
+            sup.delete_basket(table_name='basket', user_id=TRANSACTION['user_id'], supa_client=client)
+            sup.delete_user_basket(table_name='user-id', user_id=TRANSACTION['user_id'], supa_client=client)
+            result.update(data_is_saved='True')
+        except:
+            raise KeyError
+        finally:
+            result.update(status='pay success')
+            return result
 
 
     def card_remove(self, token, validated_data):

@@ -68,7 +68,7 @@ class SupabaseActions:
 
     def delete_basket(self, user_id, table_name, supa_client):
         supabase: Client = supa_client
-        basket = supabase.table(table_name).select("basket").eq("user_id", user_id).execute()
+        basket = supabase.table(table_name).select("positions").eq("user_id", user_id).execute()
         for item in basket:
             supabase.table("countries").delete().eq("id", item).execute()
             

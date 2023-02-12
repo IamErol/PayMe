@@ -194,14 +194,14 @@ LOGGING = {
     'handlers': {
         'console': {
             'level': 'INFO',
-            # 'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
-            'formatter': 'main_formatter'
+            'formatter': 'main_formatter',
         },
         'file':{
             'class': "logging.FileHandler",
             'filenamt': "info.log",
             'formatter': "json_formatter",
+            'maxBytes': 1024  * 1024 * 5
             },
         'mail_admins': {
             'level': 'ERROR',

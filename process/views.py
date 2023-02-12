@@ -20,7 +20,7 @@ load_dotenv()
 # import the logging library
 import logging
 # Get an instance of a logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('django')
 # TEST_FRONT_AUTH = {'X-Auth':'63e4bca666d78f1f2b02c088'}
 
 

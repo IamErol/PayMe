@@ -18,7 +18,8 @@ import logging.config
 import os
 from django.utils.log import DEFAULT_LOGGING
 
-
+from pythonjsonlogger.jsonlogger import JsonFormatter
+from .logs_formatters import CustomJsonFormatter
 
 load_dotenv()
 
@@ -167,48 +168,18 @@ CORS_ALLOWED_ORIGINS = [
 
 LOGGING_CONFIG = None
 
-# LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
-# LOGGING = {
-#     # Define the logging version
-#     'version': 1,
-#     # Enable the existing loggers
-#     'disable_existing_loggers': False,
-
-#     # Define the handlers
-#     'handlers': {
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.FileHandler',
-#             'filename': 'djangoapp.log',
-#         },
-
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-
-#    # Define the loggers
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-
-#         },
-#     },
-# }
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
+    
     'formatters': {
-        'verbose': {
+        'main_formatter': {
             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
             'style': '{',
         },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
+        'json_formatter':{
+            'format': CustomJsonFormatter,
         },
     },
     'filters': {
@@ -223,10 +194,15 @@ LOGGING = {
     'handlers': {
         'console': {
             'level': 'INFO',
-            'filters': ['require_debug_true'],
+            # 'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'main_formatter'
         },
+        'file':{
+            'class': "logging.FileHandler",
+            'filenamt': "info.log",
+            'formatter': "json_formatter",
+            },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -235,12 +211,13 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['info.log', 'console'],
             'propagate': True,
+            'level': 'INFO',
         },
         'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
+            'handlers': ['info.log', 'console'],
+            'level': 'INFO',
             'propagate': False,
         },
         'myproject.custom': {

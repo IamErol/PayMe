@@ -185,13 +185,13 @@ class CardVerify(APIView):
             sup.insert_data(TRANSACTION, 'transactions')
             sup.insert_data(ORDERS, 'orders')
             result.update(data_is_saved='True')
-            sup.delete_basket(table_name='basket', user_id=TRANSACTION['user_id'], supa_client=client)
-            sup.delete_user_basket(table_name='user-id', user_id=TRANSACTION['user_id'], supa_client=client)
+            sup.delete_basket(user_id=TRANSACTION['user_id'])
+            sup.delete_user_basket(user_id=TRANSACTION['user_id'])
         except:
             TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
             ORDERS = sup.orders_data_to_insert(result, validated_data)
-            sup.delete_basket(table_name='basket', user_id=TRANSACTION['user_id'], supa_client=client)
-            sup.delete_user_basket(table_name='user-id', user_id=TRANSACTION['user_id'], supa_client=client)
+            sup.delete_basket(user_id=TRANSACTION['user_id'])
+            sup.delete_user_basket(user_id=TRANSACTION['user_id'])
         
         finally:
             result.update(status='pay success')

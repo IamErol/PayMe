@@ -66,23 +66,23 @@ class SupabaseActions:
         return None
 
 
-    def delete_basket(self, user_id, table_name, supa_client):
+    def delete_basket(self, user_id):
         supabase: Client = create_client(self.url, self.key)
         try:
-            basket = supabase.table("user-data").select("basket").eq("id", user_id).execute()
+            basket = supabase.table("users-data").select("basket").eq("id", user_id).execute()
             for item in basket:
                 supabase.table("basket").delete().eq("id", item).execute()
         except:
-            return supabase.table("user-data").select("basket").eq("id", user_id).execute()
+            return supabase.table("users-data").select("basket").eq("id", user_id).execute()
             
     
             
-    def delete_user_basket(self, user_id, table_name, supa_client):
+    def delete_user_basket(self, user_id):
         supabase: Client = create_client(self.url, self.key)
         try:
-            supabase.table(table_name).update({"basket": []}).eq("id", user_id).execute()
+            supabase.table("users-data").update({"basket": []}).eq("id", user_id).execute()
         except:
-            return supabase.table(table_name).update({"basket": []}).eq("id", user_id).execute()
+            return supabase.table("users-data").update({"basket": []}).eq("id", user_id).execute()
 
 
 

@@ -117,11 +117,11 @@ class CardVerify(APIView):
         result = post_calls.post_card_verify(validated_data, URL, FRONT_AUTH)
         
         if 'error' in result:
-            if result["result"]["error"]["code"] == "-31103": # Wrong code entered.
-                return result
+            if result["error"]["code"] == "-31103": # Wrong code entered.
+                return result["error"]["code"]
                 result = post_calls.post_card_verify(validated_data, URL, FRONT_AUTH)
                 
-            if result["result"]["error"]["code"] == "-31101":  #Sms timeout. Remove token.
+            if result["error"]["code"] == "-31101":  #Sms timeout. Remove token.
                 token = validated_data['params']['token'] 
                 data = result["result"]["error"]
                 result = self.card_remove(token, validated_data)

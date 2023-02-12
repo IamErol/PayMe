@@ -60,9 +60,9 @@ class CardsCreate(APIView):
         
         result = self.card_create(validated_data=validated_data) # calling card creation.
         if 'error' in result:
-            return result
+            return Response(result)
             
-
+        
         return Response(result)
     
     

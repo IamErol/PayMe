@@ -89,7 +89,7 @@ def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
                                                 price = validated_data['params']['detail']['items'][0]['price'],
                                                 count = validated_data['params']['detail']['items'][0]['count'],
                                                 code = validated_data['params']['detail']['items'][0]['code'],
-                                                vat_percent = 0,
+                                                vat_percent = validated_data['params']['detail']['items'][0]['vat_percent'],
                                                 units= validated_data['params']['detail']['items'][0]['units'],
                                                 package_code = validated_data['params']['detail']['items'][0]['package_code'],
                                                 )

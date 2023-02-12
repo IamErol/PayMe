@@ -60,14 +60,9 @@ class CardsCreate(APIView):
         
         result = self.card_create(validated_data=validated_data) # calling card creation.
         if 'error' in result:
-            return Response({
-                             "income_data":validated_data,
-                             "result":result,
-                             "fail": "start"})
+            return result
             
-        
-        # ORDERS = sup.orders_data_to_insert(result, validated_data)  
-        # sup.insert_data(ORDERS, 'orders')
+
         return Response(result)
     
     
@@ -78,7 +73,7 @@ class CardsCreate(APIView):
         result = post_calls.post_card_create(validated_data, URL, FRONT_AUTH)
 
         if 'error' in result:
-            result.update(fail='at card_create')
+            # result.update(fail='at card_create')
             return result
 
         token = result['result']['card']['token']
@@ -93,7 +88,7 @@ class CardsCreate(APIView):
         result = post_calls.post_card_get_verify_code(validated_data, token, URL, FRONT_AUTH)
         
         if 'error' in result:
-            result.update(fail='card_get_verify_code')
+            # result.update(fail='card_get_verify_code')
             return result
 
         result.update(token=token)
@@ -122,10 +117,16 @@ class CardVerify(APIView):
         result = post_calls.post_card_verify(validated_data, URL, FRONT_AUTH)
         
         if 'error' in result:
-            token = validated_data['params']['token'] 
-            data = result
-            result = self.card_remove(token, validated_data)
-            result.update(fail='card_verify, card removed', data=data)
+            if result["result"]["error"]["code"] == "-31103": # Wrong code entered.
+                return result
+                result = post_calls.post_card_verify(validated_data, URL, FRONT_AUTH)
+                
+            if result["result"]["error"]["code"] == "-31101":  #Sms timeout. Remove token.
+                token = validated_data['params']['token'] 
+                data = result["result"]["error"]
+                result = self.card_remove(token, validated_data)
+                result["result"].update(fail='card removed', error=data)
+                
             return result
 
         # result = self.receipts_create(validated_data)
@@ -140,7 +141,7 @@ class CardVerify(APIView):
         token=validated_data['params']['token']
         if 'error' in result:
             remove = self.card_remove(token, validated_data)
-            result.update(fail='cards check', remove_response=remove)
+            # result.update(fail='cards check', remove_response=remove)
             return result
 
         result = self.receipts_create(validated_data)

@@ -69,7 +69,8 @@ class SupabaseActions:
     def delete_basket(self, user_id):
         supabase: Client = create_client(self.url, self.key)
         try:
-            basket = supabase.table("users-data").select("basket").eq("id", user_id).execute()
+            raw_basket = supabase.table("users-data").select("basket").eq("id", user_id).execute()
+            basket = raw_basket.data[0]['basket']
             for item in basket:
                 supabase.table("basket").delete().eq("id", item).execute()
         except:

@@ -184,9 +184,9 @@ class CardVerify(APIView):
             ORDERS = sup.orders_data_to_insert(result, validated_data)
             sup.insert_data(TRANSACTION, 'transactions')
             sup.insert_data(ORDERS, 'orders')
+            result.update(data_is_saved='True')
             sup.delete_basket(table_name='basket', user_id=TRANSACTION['user_id'], supa_client=client)
             sup.delete_user_basket(table_name='user-id', user_id=TRANSACTION['user_id'], supa_client=client)
-            result.update(data_is_saved='True')
         except:
             raise KeyError
         finally:

@@ -67,7 +67,7 @@ class SupabaseActions:
 
 
     def delete_basket(self, user_id, table_name, supa_client):
-        supabase: Client = supa_client
+        supabase: Client = create_client(self.url, self.key)
         try:
             basket = supabase.table("user-data").select("basket").eq("id", user_id).execute()
             for item in basket:
@@ -78,7 +78,7 @@ class SupabaseActions:
     
             
     def delete_user_basket(self, user_id, table_name, supa_client):
-        supabase: Client = supa_client
+        supabase: Client = create_client(self.url, self.key)
         try:
             supabase.table(table_name).update({"basket": []}).eq("id", user_id).execute()
         except:

@@ -188,7 +188,11 @@ class CardVerify(APIView):
             sup.delete_basket(table_name='basket', user_id=TRANSACTION['user_id'], supa_client=client)
             sup.delete_user_basket(table_name='user-id', user_id=TRANSACTION['user_id'], supa_client=client)
         except:
-            raise KeyError
+            TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            ORDERS = sup.orders_data_to_insert(result, validated_data)
+            sup.delete_basket(table_name='basket', user_id=TRANSACTION['user_id'], supa_client=client)
+            sup.delete_user_basket(table_name='user-id', user_id=TRANSACTION['user_id'], supa_client=client)
+        
         finally:
             result.update(status='pay success')
             return result

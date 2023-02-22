@@ -79,19 +79,19 @@ def post_receipts_create(validated_data: dict, URL:str, header: dict) -> dict:
                     
                                     detail = dict(
                                                     receipt_type= 0,
-                                                    shipping= dict(
-                                                                    title=validated_data['params']['detail']['shipping']['title'],
-                                                                    price=validated_data['params']['detail']['shipping']['price'],
+                                                    # shipping= dict(
+                                                    #                 title=validated_data['params']['detail']['shipping']['title'],
+                                                    #                 price=validated_data['params']['detail']['shipping']['price'],
                                     
-                                                                   ),
-                                    items=[dict(
-                                                title = validated_data['params']['detail']['items'][0]['title'],
-                                                price = validated_data['params']['detail']['items'][0]['price'],
-                                                count = validated_data['params']['detail']['items'][0]['count'],
-                                                code = validated_data['params']['detail']['items'][0]['code'],
-                                                vat_percent = validated_data['params']['detail']['items'][0]['vat_percent'],
-                                                units= int(validated_data['params']['detail']['items'][0]['units']),
-                                                package_code = validated_data['params']['detail']['items'][0]['package_code'],
+                                                    #                ),
+                                                items=[dict(
+                                                            title = validated_data['params']['detail']['items'][0]['title'],
+                                                            price = validated_data['params']['detail']['items'][0]['price'],
+                                                            count = validated_data['params']['detail']['items'][0]['count'],
+                                                            code = validated_data['params']['detail']['items'][0]['code'],
+                                                            vat_percent = validated_data['params']['detail']['items'][0]['vat_percent'],
+                                                            units= int(validated_data['params']['detail']['items'][0]['units']),
+                                                            package_code = validated_data['params']['detail']['items'][0]['package_code'],
                                                 )
                                            ]
                 

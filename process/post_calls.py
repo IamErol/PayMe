@@ -134,3 +134,18 @@ def post_card_remove(validated_data: dict, URL:str, header: dict, token:str) -> 
     response = requests.post(URL, json=data, headers=header)
     result = response.json()
     return result
+
+
+def post_receipts_pay(validated_data, URL:str, header: dict) -> dict:
+    
+        data = dict(
+            id=int(validated_data['params']['post_id']),
+            method=RECEIPTS_GET,
+            params=dict(
+                        id=str(validated_data['params']['id'])
+            )
+        )
+        
+        response = requests.post(URL, json=data, headers=header)
+        result = response.json()
+        return result

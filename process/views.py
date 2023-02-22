@@ -217,3 +217,29 @@ def index(request):
 
 def main(request):
     return HttpResponse('main')
+
+
+
+class ReceiptsGet(APIView):
+    """Verify card"""
+
+    def post(self, request):
+        '''
+        Takes post request from client and sends post request to PayMe.
+        '''
+           
+        serializer = SubscribeSerializer(data=request.data, many=False)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        # id = validated_data['id']
+        
+        result = self.receipts_get(validated_data)
+        
+        return Response(result)  # returns result in Json format using Response(dict)
+    
+    
+    def receipts_get(self, validated_data):
+        
+        # post_calls.post_card_remove(validated_data, URL, AUTHORIZATION, token)
+        result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION)
+        return result

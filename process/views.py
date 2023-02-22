@@ -241,5 +241,5 @@ class ReceiptsGet(APIView):
     def receipts_get(self, validated_data):
         
         # post_calls.post_card_remove(validated_data, URL, AUTHORIZATION, token)
-        result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION)
+        result = post_calls.post_receipts_get(validated_data, URL, AUTHORIZATION)
         return result

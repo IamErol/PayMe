@@ -155,8 +155,8 @@ class CardVerify(APIView):
         token=validated_data['params']['token']
         if 'error' in result:
             receipt = result
-            TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
-            sup.insert_data(TRANSACTION, 'transactions')
+            # TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            # sup.insert_data(TRANSACTION, 'transactions')
             
             result = self.card_remove(token, validated_data)
             result.update(fail='receipt create', receipt=receipt)
@@ -173,10 +173,17 @@ class CardVerify(APIView):
         transaction_order_id = str(uuid.uuid4())
         
         result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION, receipt_id, token)
-        
-        TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
-        sup.insert_data(TRANSACTION, 'transactions')
+        transaction_data = {"status":'Not paid', 
+                "order_id":transaction_order_id, 
+                "user_id":validated_data["params"]['account']["user_id"], 
+                "cards_token":validated_data["params"]["token"], 
+                "amount":str(validated_data['params']['amount'])[:-2], 
+                "receipts_id":validated_data["params"]['result']['receipt']['_id'], 
+                "request_id":validated_data["params"]['post_id'],
+                "cash":validated_data["params"]['cash']}
         if 'error' in result:
+            TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            sup.insert_data(transaction_data, 'transactions')
             receipts_pay_response = result
             result = self.card_remove(token, validated_data)
             result.update(fail='pay', token=token, receipts_pay_response=result)
@@ -184,15 +191,12 @@ class CardVerify(APIView):
         
         result["result"].update(transaction_order_id=transaction_order_id)
         try:
-            # TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
-            # sup.insert_data(TRANSACTION, 'transactions')
-            # if 'error' in result:
-            #     receipts_pay_response = result
-            #     result = self.card_remove(token, validated_data)
-            #     result.update(fail='pay', token=token, receipts_pay_response=receipts_pay_response)
-            #     return result
+            TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            sup.insert_data(TRANSACTION, 'transactions')
+
             ORDERS = sup.orders_data_to_insert(result, validated_data)
             sup.insert_data(ORDERS, 'orders')
+            
             result.update(data_is_saved='True')
             sup.delete_basket(user_id=TRANSACTION['user_id'])
             sup.delete_user_basket(user_id=TRANSACTION['user_id'])

@@ -155,6 +155,8 @@ class CardVerify(APIView):
         token=validated_data['params']['token']
         if 'error' in result:
             receipt = result
+            TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            sup.insert_data(TRANSACTION, 'transactions')
             
             result = self.card_remove(token, validated_data)
             result.update(fail='receipt create', receipt=receipt)

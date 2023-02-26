@@ -172,23 +172,24 @@ class CardVerify(APIView):
         
         result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION, receipt_id, token)
         
-
-        # if 'error' in result:
-        #     receipts_pay_response = result
-        #     result = self.card_remove(token, validated_data)
-        #     result.update(fail='pay', token=token, receipts_pay_response=result)
-        #     return result
+        TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+        sup.insert_data(TRANSACTION, 'transactions')
+        if 'error' in result:
+            receipts_pay_response = result
+            result = self.card_remove(token, validated_data)
+            result.update(fail='pay', token=token, receipts_pay_response=result)
+            return result
         
         result["result"].update(transaction_order_id=transaction_order_id)
         try:
-            TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            # TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            # sup.insert_data(TRANSACTION, 'transactions')
+            # if 'error' in result:
+            #     receipts_pay_response = result
+            #     result = self.card_remove(token, validated_data)
+            #     result.update(fail='pay', token=token, receipts_pay_response=receipts_pay_response)
+            #     return result
             ORDERS = sup.orders_data_to_insert(result, validated_data)
-            sup.insert_data(TRANSACTION, 'transactions')
-            if 'error' in result:
-                receipts_pay_response = result
-                result = self.card_remove(token, validated_data)
-                result.update(fail='pay', token=token, receipts_pay_response=receipts_pay_response)
-                return result
             sup.insert_data(ORDERS, 'orders')
             result.update(data_is_saved='True')
             sup.delete_basket(user_id=TRANSACTION['user_id'])
@@ -199,9 +200,9 @@ class CardVerify(APIView):
             sup.delete_basket(user_id=TRANSACTION['user_id'])
             sup.delete_user_basket(user_id=TRANSACTION['user_id'])
         
-        
+        finally:
+            return result
         # result.update(status='pay success')
-        return result
 
 
     def card_remove(self, token, validated_data):

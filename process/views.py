@@ -182,7 +182,7 @@ class CardVerify(APIView):
                 "request_id":validated_data["params"]['post_id'],
                 "cash":validated_data["params"]['cash']}
         if 'error' in result:
-            TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
+            # TRANSACTION = sup.transactions_data_to_insert(result, validated_data)
             sup.insert_data(transaction_data, 'transactions')
             receipts_pay_response = result
             result = self.card_remove(token, validated_data)

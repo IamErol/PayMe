@@ -178,7 +178,7 @@ class CardVerify(APIView):
                 "user_id":validated_data["params"]['account']["user_id"], 
                 "cards_token":validated_data["params"]["token"], 
                 "amount":str(validated_data['params']['amount'])[:-2], 
-                "receipts_id":validated_data["params"]['result']['receipt']['_id'], 
+                "receipts_id":receipt_id, 
                 "request_id":validated_data["params"]['post_id'],
                 "cash":validated_data["params"]['cash']}
         if 'error' in result:

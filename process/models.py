@@ -22,7 +22,7 @@ class SupabaseActions:
         self.password = password
     
     def supabase_login(self):
-        supabase: Client|None = create_client(self.url, self.key)
+        supabase: Client = create_client(self.url, self.key)
         return supabase
     
     def transactions_data_to_insert(self, result, validated_data) -> dict:

@@ -186,7 +186,7 @@ class CardVerify(APIView):
             sup.insert_data(transaction_data, 'transactions')
             receipts_pay_response = result
             result = self.card_remove(token, validated_data)
-            result.update(fail='pay', token=token, receipts_pay_response=result)
+            result.update(fail='pay', token=token, receipts_pay_response=receipts_pay_response)
             return result
         
         result["result"].update(transaction_order_id=transaction_order_id)

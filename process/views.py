@@ -173,7 +173,7 @@ class CardVerify(APIView):
         transaction_order_id = str(uuid.uuid4())
         
         result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION, receipt_id, token)
-        transaction_data = {"status":'Not paid', 
+        transaction_data = {"status":400, 
                 "order_id":transaction_order_id, 
                 "user_id":validated_data["params"]['account']["user_id"], 
                 "cards_token":validated_data["params"]["token"], 

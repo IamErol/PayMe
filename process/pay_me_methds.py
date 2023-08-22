@@ -1,5 +1,4 @@
 #  PAYME POST METHODS
-
 CARD_CREATE = 'cards.create'
 CARD_GET_VERIFY_CODE = 'cards.get_verify_code'
 CARD_VERIFY = 'cards.verify'

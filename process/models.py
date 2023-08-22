@@ -13,16 +13,29 @@ orders_fields = ('order_amount', 'fulfillment_status', 'owner')
 transaction_fileds = ('status', 'transaction_token', 'customer_id', 'order_id')
 customers_fields = ('full_name', 'email', 'phone', 'address')
 class SupabaseActions:
+<<<<<<< Updated upstream
 
     def __init__(self, url: str = os.getenv("NEXT_PUBLIC_SUPABASE_URL", default=''),
                  key: str = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY", default=''),
                  email: str = os.getenv("SUPABASE_USER_EMAIL", default=''),
                  password: str = os.getenv("SUPABASE_USER_PASSWORD", default=''),) -> None:
         
+=======
+    customers = ('full_name', 'email', 'phone', 'address')
+
+    def __init__(self,
+                 url: str = os.getenv("SUPABASE_URL", default=''),
+                 key: str = os.getenv("SUPABASE_KEY", default=''),
+                 email: str = os.getenv("SUPABASE_USER_EMAIL", default=''),
+                 password: str = os.getenv("SUPABASE_USER_PASSWORD", default=''),
+                 ) -> None:
+
+>>>>>>> Stashed changes
         self.url = url
         self.key = key
         self.email = email
         self.password = password
+<<<<<<< Updated upstream
         
     # def db_login(self):
     #     supabase: Client = create_client(self.url, self.key)
@@ -60,3 +73,62 @@ class SupabaseActions:
         
         return None
 
+=======
+
+    def supabase_login(self):
+        supabase: Client = create_client(self.url, self.key)
+        return supabase
+
+    def transactions_data_to_insert(self, result, validated_data) -> dict:
+
+
+        transaction_data = {"status":result["result"]['receipt']['state'],
+                "order_id":result["result"]['transaction_order_id'],
+                "user_id":validated_data["params"]['account']["user_id"],
+                "cards_token":validated_data["params"]["token"],
+                "amount":str(result["result"]['receipt']['amount'])[:-2],
+                "receipts_id":result["result"]['receipt']['_id'],
+                "request_id":validated_data["params"]['post_id'],
+                "cash":validated_data["params"]['cash']}
+        return transaction_data
+
+
+
+
+    def orders_data_to_insert(self, result, validated_data) -> dict:
+
+        order_data = {
+                        "user_id":validated_data["params"]['account']["user_id"],
+                        "order_amount":str(result["result"]['receipt']['amount'])[:-2],
+                        "status":validated_data["params"]['status'],
+                        "positions":validated_data["params"]['positions'],
+                        "transaction_id":result["result"]['transaction_order_id'],
+                        "user_data":validated_data["params"]['account']
+                        }
+        return order_data
+
+
+    def insert_data(self, data_to_insert: dict, table_name: str):
+        supabase: Client = create_client(self.url, self.key)
+        supabase.table(table_name).insert(data_to_insert).execute()
+        return None
+
+
+    def delete_basket(self, user_id):
+        supabase: Client = create_client(self.url, self.key)
+        try:
+            raw_basket = supabase.table("users-data").select("basket").eq("id", user_id).execute()
+            basket = raw_basket.data[0]['basket']
+            for item in basket:
+                supabase.table("basket").delete().eq("id", item).execute()
+        except:
+            return supabase.table("users-data").select("basket").eq("id", user_id).execute()
+
+
+    def delete_user_basket(self, user_id):
+        supabase: Client = create_client(self.url, self.key)
+        try:
+            supabase.table("users-data").update({"basket": []}).eq("id", user_id).execute()
+        except:
+            return supabase.table("users-data").update({"basket": []}).eq("id", user_id).execute()
+>>>>>>> Stashed changes

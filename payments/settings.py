@@ -36,7 +36,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('SECRET_KEY') == 'True'
 
 ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['.vercel.app']
+
 
 
 # Application definition
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'process',
     'rest_framework',
     'corsheaders',
@@ -148,6 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # }
 
 PAYME_SETTINGS = {
+<<<<<<< Updated upstream
     'DEBUG':True,   #True - test mode, False - production mode
     'PAY_ME_ID':os.getenv('PAY_ME_ID'),  
     'PAY_ME_TEST_KEY':os.getenv('PAY_ME_TEST_KEY'),
@@ -155,6 +156,17 @@ PAYME_SETTINGS = {
     #     'KEY_1':'order_id',
     #     'KEY_2':'',
     # }
+=======
+
+    'TEST_URL':os.getenv('TEST_URL'),
+    'PAY_ME_TEST_ID':os.getenv('PAY_ME_TEST_ID'),
+    'PAY_ME_TEST_KEY':os.getenv('PAY_ME_TEST_KEY'),
+
+    'PROD_URL':os.getenv('PROD_URL'),
+    'PAY_ME_PROD_ID':os.getenv('PAY_ME_PROD_ID'),
+    'PAY_ME_PROD_KEY':os.getenv('PAY_ME_PROD_KEY'),
+
+>>>>>>> Stashed changes
 }
 
 CORS_ALLOWED_ORIGINS = [
@@ -168,7 +180,12 @@ LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
 
 logging.config.dictConfig({
     'version': 1,
+<<<<<<< Updated upstream
     'disable_existing_loggers': False,
+=======
+    'disable_existing_loggers': True,
+
+>>>>>>> Stashed changes
     'formatters': {
         'default': {
             # exact format is not important, this is the minimum information

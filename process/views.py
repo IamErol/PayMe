@@ -1,20 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import SubscribeSerializer
-import requests
 from payments.settings import PAYME_SETTINGS
-import os
-from supabase.client import Client, create_client
 from dotenv import load_dotenv
-from random import randint
 from .models import *
-from .pay_me_methds import *
 from . import post_calls
 import secrets
-from django.http import HttpResponse
 import logging
 import uuid
-import datetime
+
 load_dotenv()
 import logging
 
@@ -23,53 +17,45 @@ stage = os.getenv('STAGE')
 sup = SupabaseActions()
 client = sup.supabase_login()
 
-
 if stage == 'test':
     URL = PAYME_SETTINGS['TEST_URL']
     FRONT_AUTH = {'X-Auth': '{}'.format(PAYME_SETTINGS['PAY_ME_TEST_ID'])}
     AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_TEST_ID'],
-                                          PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
+                                              PAYME_SETTINGS['PAY_ME_TEST_KEY'])}
 else:
     if stage == 'prod':
         URL = PAYME_SETTINGS['PROD_URL']
         FRONT_AUTH = {'X-Auth': '{}'.format(PAYME_SETTINGS['PAY_ME_PROD_ID'])}
         AUTHORIZATION = {'X-Auth': '{}:{}'.format(PAYME_SETTINGS['PAY_ME_PROD_ID'],
-                                            PAYME_SETTINGS['PAY_ME_PROD_KEY'])}
+                                                  PAYME_SETTINGS['PAY_ME_PROD_KEY'])}
 
 
 class CardsCreate(APIView):
     """Creates token and verifies debit card with sms verification."""
-
     def post(self, request):
-        post_id = int(secrets.randbits(32)) # generating id number for post requests to PayMe.
+        post_id = int(secrets.randbits(32))  # generating id number for post requests to PayMe.
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
-        validated_data.update(post_id=post_id) # including id number for future post requests to PayMe.
+        validated_data.update(post_id=post_id)  # including id number for future post requests to PayMe.
 
-        result = self.card_create(validated_data=validated_data) # calling card creation.
+        result = self.card_create(validated_data=validated_data)  # calling card creation.
         if 'error' in result:
             return Response(result)
-
 
         return Response(result)
 
     def card_create(self, validated_data):
         """Create token for bank card."""
-
         result = post_calls.post_card_create(validated_data, URL, FRONT_AUTH)
-
         if 'error' in result:
             return result
-
         token = result['result']['card']['token']
-        result = self.card_get_verify_code(token, validated_data) # calls sms verification function.
-        return result  # returns messge sent status.
-
+        result = self.card_get_verify_code(token, validated_data)  # calls sms verification function.
+        return result  # returns message sent status.
 
     def card_get_verify_code(self, token, validated_data):
         """Returns the verification code."""
-
         result = post_calls.post_card_get_verify_code(validated_data, token, URL, FRONT_AUTH)
         if 'error' in result:
             return result
@@ -82,7 +68,6 @@ class CardVerify(APIView):
 
     def post(self, request):
         """Takes post request from client and sends post request to PayMe."""
-
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
@@ -92,12 +77,11 @@ class CardVerify(APIView):
 
     def card_verify(self, validated_data):
         """Sends code to Payme to verify card."""
-
         result = post_calls.post_card_verify(validated_data, URL, FRONT_AUTH)
         if 'error' in result:
-            if result["error"]["code"] == "-31103": # Wrong code entered.
+            if result["error"]["code"] == "-31103":  # Wrong code entered.
                 return result["error"]["code"]
-            if result["error"]["code"] == "-31101":  #Sms timeout. Remove token.
+            if result["error"]["code"] == "-31101":  # Sms timeout. Remove token.
                 token = validated_data['params']['token']
                 data = result["error"]
                 result = self.card_remove(token, validated_data)
@@ -110,11 +94,10 @@ class CardVerify(APIView):
 
     def cards_check(self, validated_data):
         """Checking if token is valid."""
-
         result = post_calls.post_card_check(validated_data, URL, FRONT_AUTH)
-        token=validated_data['params']['token']
+        token = validated_data['params']['token']
         if 'error' in result:
-            remove = self.card_remove(token, validated_data)
+            self.card_remove(token, validated_data)
             return result
 
         result = self.receipts_create(validated_data)
@@ -122,10 +105,8 @@ class CardVerify(APIView):
 
     def receipts_create(self, validated_data):
         """Cretes receipts for further payment."""
-
         result = post_calls.post_receipts_create(validated_data, URL, AUTHORIZATION)
-
-        token=validated_data['params']['token']
+        token = validated_data['params']['token']
         if 'error' in result:
             receipt = result
             result = self.card_remove(token, validated_data)
@@ -143,14 +124,14 @@ class CardVerify(APIView):
         transaction_order_id = str(uuid.uuid4())
 
         result = post_calls.post_receipts_pay(validated_data, URL, AUTHORIZATION, receipt_id, token)
-        transaction_data = {"status":400,
-                "order_id":transaction_order_id,
-                "user_id":validated_data["params"]['account']["user_id"],
-                "cards_token":validated_data["params"]["token"],
-                "amount":str(validated_data['params']['amount'])[:-2],
-                "receipts_id":receipt_id,
-                "request_id":validated_data["params"]['post_id'],
-                "cash":validated_data["params"]['cash']}
+        transaction_data = {"status": 400,
+                            "order_id": transaction_order_id,
+                            "user_id": validated_data["params"]['account']["user_id"],
+                            "cards_token": validated_data["params"]["token"],
+                            "amount": str(validated_data['params']['amount'])[:-2],
+                            "receipts_id": receipt_id,
+                            "request_id": validated_data["params"]['post_id'],
+                            "cash": validated_data["params"]['cash']}
         if 'error' in result:
             sup.insert_data(transaction_data, 'transactions')
             receipts_pay_response = result
@@ -195,7 +176,6 @@ class ReceiptsGet(APIView):
 
     def post(self, request):
         """Takes post request from client and sends post request to PayMe."""
-
         serializer = SubscribeSerializer(data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
@@ -203,6 +183,8 @@ class ReceiptsGet(APIView):
 
         return Response(result)
 
-    def receipts_get(self, validated_data):
+    @staticmethod
+    def receipts_get(validated_data):
+        """Get receipt info."""
         result = post_calls.post_receipts_get(validated_data, URL, AUTHORIZATION)
         return result
